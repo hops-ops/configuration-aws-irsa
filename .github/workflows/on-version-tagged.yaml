@@ -13,7 +13,7 @@ permissions:
 jobs:
 
   publish:
-    uses: unbounded-tech/workflows-crossplane/.github/workflows/publish.yaml@v0.3.2
+    uses: unbounded-tech/workflows-crossplane/.github/workflows/publish.yaml@v0.4.2
     secrets: inherit
     with:
       tag: ${{ github.ref_name }}
