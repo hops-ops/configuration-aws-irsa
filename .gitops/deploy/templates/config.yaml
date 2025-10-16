@@ -1,23 +1,23 @@
 apiVersion: pkg.crossplane.io/v1
 kind: Configuration
 metadata:
-  name: hops-xrd-irsa
+  name: config-irsa
 spec:
-  package: ghcr.io/unbounded-tech/hops-xrd-irsa:{{ .Values.version }}
+  package: ghcr.io/unbounded-tech/config-irsa:{{ .Values.version }}
   packagePullSecrets:
     - name: ghcr
   skipDependencyResolution: {{ .Values.skipDependencyResolution }}
 
 ---
 
-# skipDependencyResolution false would have named this unbounded-tech-hops-xrd-irsarender
+# skipDependencyResolution false would have named this unbounded-tech-config-irsarender
 # so we need to match that format to avoid issues with the package name
 apiVersion: pkg.crossplane.io/v1
 kind: Function
 metadata:
-  name: unbounded-tech-hops-xrd-irsarender
+  name: unbounded-tech-config-irsarender
 spec:
-  package: ghcr.io/unbounded-tech/hops-xrd-irsa_render:{{ .Values.version }}
+  package: ghcr.io/unbounded-tech/config-irsa_render:{{ .Values.version }}
   packagePullSecrets:
     - name: ghcr
   skipDependencyResolution: {{ .Values.skipDependencyResolution }}

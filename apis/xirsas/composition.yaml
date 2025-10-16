@@ -1,7 +1,7 @@
 apiVersion: apiextensions.crossplane.io/v1
 kind: Composition
 metadata:
-  name: hops-xrd-irsa-v1alpha1-1
+  name: config-irsa-v1alpha1-1
 spec:
   compositeTypeRef:
     apiVersion: hops.unbounded-tech.com/v1alpha1
@@ -9,7 +9,7 @@ spec:
   mode: Pipeline
   pipeline:
   - functionRef:
-      name: unbounded-tech-hops-xrd-irsarender
+      name: unbounded-tech-config-irsarender
     step: render
   - functionRef:
       name: crossplane-contrib-function-auto-ready

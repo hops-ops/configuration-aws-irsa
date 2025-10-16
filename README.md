@@ -1,11 +1,11 @@
 
-# hops-xrd-irsa
+# config-irsa
 
 A Crossplane Configuration Package for effortless Cert-Manager deployment with Let's Encrypt integration.
 
 ## Overview
 
-The `hops-xrd-irsa` project is a Crossplane Configuration package that simplifies the deployment and management of [Cert-Manager](https://irsa.io/) on Kubernetes clusters. It automatically provisions an initial ClusterIssuer for Let's Encrypt (staging and production), with seamless AWS integration for DNS-01 challenges using Route53 and secure IAM role-based access via IRSA (IAM Roles for Service Accounts).
+The `config-irsa` project is a Crossplane Configuration package that simplifies the deployment and management of [Cert-Manager](https://irsa.io/) on Kubernetes clusters. It automatically provisions an initial ClusterIssuer for Let's Encrypt (staging and production), with seamless AWS integration for DNS-01 challenges using Route53 and secure IAM role-based access via IRSA (IAM Roles for Service Accounts).
 
 This package provides the `XCertManager` composite resource definition (XRD) to configure Cert-Manager installations with AWS-specific settings including hosted zones, OIDC providers, and IAM roles. Designed for Kubernetes clusters running on AWS EKS.
 
@@ -78,15 +78,15 @@ spec:
 
 ### 3. Install the Configuration Package
 
-Install the `hops-xrd-irsa` package:
+Install the `config-irsa` package:
 
 ```yaml
 apiVersion: pkg.crossplane.io/v1
 kind: Configuration
 metadata:
-  name: hops-xrd-irsa
+  name: config-irsa
 spec:
-  package: ghcr.io/unbounded-tech/hops-xrd-irsa:latest
+  package: ghcr.io/unbounded-tech/config-irsa:latest
   packagePullSecrets:
     - name: ghcr
   skipDependencyResolution: true
@@ -135,7 +135,7 @@ This creates:
 ## Project Structure
 
 ```
-hops-xrd-irsa/
+config-irsa/
 ├── .github/workflows/               # GitHub Actions CI/CD automation
 │   ├── quality.yaml                 # Composition validation and testing
 │   ├── on-push-main.yaml            # Versioning and tagging on main branch
@@ -305,8 +305,8 @@ Apache-2.0 License. See [LICENSE](LICENSE) for details.
 
 ## Support
 
-- **Issues**: [GitHub Issues](https://github.com/unbounded-tech/hops-xrd-irsa/issues)
-- **Discussions**: [GitHub Discussions](https://github.com/unbounded-tech/hops-xrd-irsa/discussions)
+- **Issues**: [GitHub Issues](https://github.com/unbounded-tech/config-irsa/issues)
+- **Discussions**: [GitHub Discussions](https://github.com/unbounded-tech/config-irsa/discussions)
 
 ## Maintainer
 
@@ -314,7 +314,7 @@ Apache-2.0 License. See [LICENSE](LICENSE) for details.
 
 ## Links
 
-- **GitHub Repository**: [github.com/unbounded-tech/hops-xrd-irsa](https://github.com/unbounded-tech/hops-xrd-irsa)
-- **Container Registry**: [ghcr.io/unbounded-tech/hops-xrd-irsa](ghcr.io/unbounded-tech/hops-xrd-irsa)
+- **GitHub Repository**: [github.com/unbounded-tech/config-irsa](https://github.com/unbounded-tech/config-irsa)
+- **Container Registry**: [ghcr.io/unbounded-tech/config-irsa](ghcr.io/unbounded-tech/config-irsa)
 - **Documentation**: [docs.crossplane.io](https://docs.crossplane.io/)
 - **Cert-Manager**: [irsa.io](https://irsa.io/)
