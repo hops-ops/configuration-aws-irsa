@@ -10,12 +10,12 @@ spec:
 
 ---
 
-# skipDependencyResolution false would have named this unbounded-tech-config-irsarender
+# skipDependencyResolution false would have named this hops-ops-config-irsarender
 # so we need to match that format to avoid issues with the package name
 apiVersion: pkg.crossplane.io/v1
 kind: Function
 metadata:
-  name: unbounded-tech-config-irsarender
+  name: hops-ops-config-irsarender
 spec:
   package: ghcr.io/hops-ops/config-irsa_render:{{ .Values.version }}
   packagePullSecrets:
