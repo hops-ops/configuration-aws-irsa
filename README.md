@@ -86,7 +86,7 @@ kind: Configuration
 metadata:
   name: config-irsa
 spec:
-  package: ghcr.io/unbounded-tech/config-irsa:latest
+  package: ghcr.io/hops-ops/config-irsa:latest
   packagePullSecrets:
     - name: ghcr
   skipDependencyResolution: true
@@ -315,6 +315,6 @@ Apache-2.0 License. See [LICENSE](LICENSE) for details.
 ## Links
 
 - **GitHub Repository**: [github.com/unbounded-tech/config-irsa](https://github.com/unbounded-tech/config-irsa)
-- **Container Registry**: [ghcr.io/unbounded-tech/config-irsa](ghcr.io/unbounded-tech/config-irsa)
+- **Container Registry**: [ghcr.io/hops-ops/config-irsa](ghcr.io/hops-ops/config-irsa)
 - **Documentation**: [docs.crossplane.io](https://docs.crossplane.io/)
 - **Cert-Manager**: [irsa.io](https://irsa.io/)

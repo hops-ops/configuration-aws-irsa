@@ -27,5 +27,5 @@ spec:
     # config-irsa
 
     Configures IAM Roles for Service Accounts (IRSA) on EKS clusters.
-  repository: ghcr.io/unbounded-tech/config-irsa
+  repository: ghcr.io/hops-ops/config-irsa
   source: github.com/upbound/project-template

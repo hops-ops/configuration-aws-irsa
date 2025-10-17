@@ -3,7 +3,7 @@ kind: Configuration
 metadata:
   name: config-irsa
 spec:
-  package: ghcr.io/unbounded-tech/config-irsa:{{ .Values.version }}
+  package: ghcr.io/hops-ops/config-irsa:{{ .Values.version }}
   packagePullSecrets:
     - name: ghcr
   skipDependencyResolution: {{ .Values.skipDependencyResolution }}
@@ -17,7 +17,7 @@ kind: Function
 metadata:
   name: unbounded-tech-config-irsarender
 spec:
-  package: ghcr.io/unbounded-tech/config-irsa_render:{{ .Values.version }}
+  package: ghcr.io/hops-ops/config-irsa_render:{{ .Values.version }}
   packagePullSecrets:
     - name: ghcr
   skipDependencyResolution: {{ .Values.skipDependencyResolution }}
