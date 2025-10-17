@@ -4,7 +4,7 @@ metadata:
   name: config-irsa
   annotations:
     meta.crossplane.io/maintainer: Patrick Lee Scott
-    meta.crossplane.io/source: github.com/unbounded-tech/config-irsa
+    meta.crossplane.io/source: github.com/hops-ops/config-irsa
     meta.crossplane.io/description: A Configuration package that defines hops's `IRSA` installation.
 spec:
   dependsOn:

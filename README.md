@@ -305,8 +305,8 @@ Apache-2.0 License. See [LICENSE](LICENSE) for details.
 
 ## Support
 
-- **Issues**: [GitHub Issues](https://github.com/unbounded-tech/config-irsa/issues)
-- **Discussions**: [GitHub Discussions](https://github.com/unbounded-tech/config-irsa/discussions)
+- **Issues**: [GitHub Issues](https://github.com/hops-ops/config-irsa/issues)
+- **Discussions**: [GitHub Discussions](https://github.com/hops-ops/config-irsa/discussions)
 
 ## Maintainer
 
@@ -314,7 +314,7 @@ Apache-2.0 License. See [LICENSE](LICENSE) for details.
 
 ## Links
 
-- **GitHub Repository**: [github.com/unbounded-tech/config-irsa](https://github.com/unbounded-tech/config-irsa)
+- **GitHub Repository**: [github.com/hops-ops/config-irsa](https://github.com/hops-ops/config-irsa)
 - **Container Registry**: [ghcr.io/hops-ops/config-irsa](ghcr.io/hops-ops/config-irsa)
 - **Documentation**: [docs.crossplane.io](https://docs.crossplane.io/)
 - **Cert-Manager**: [irsa.io](https://irsa.io/)
