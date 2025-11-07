@@ -3,7 +3,7 @@
 apiVersion: iam.aws.upbound.io/v1beta1
 kind: RolePolicyAttachment
 metadata:
-  name: {{ $name }}
+  name: {{ $attachmentName }}
   annotations:
     gotemplating.fn.crossplane.io/composition-resource-name: "irsa-role-policy-attachment"
 spec:

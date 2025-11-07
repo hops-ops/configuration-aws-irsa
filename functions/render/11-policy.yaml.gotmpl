@@ -3,7 +3,7 @@
 apiVersion: iam.aws.upbound.io/v1beta1
 kind: Policy
 metadata:
-  name: {{ $policyPrefix }}{{ $clusterName }}-{{ $name }}
+  name: {{ $policyName }}
   annotations:
     gotemplating.fn.crossplane.io/composition-resource-name: "irsa-policy"
   labels:

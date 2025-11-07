@@ -6,7 +6,7 @@
 apiVersion: iam.aws.upbound.io/v1beta1
 kind: Role
 metadata:
-  name: {{ $rolePrefix }}{{$clusterName}}-{{ $name }}
+  name: {{ $roleName }}
   annotations:
     gotemplating.fn.crossplane.io/composition-resource-name: "irsa-role"
   labels:
@@ -23,12 +23,12 @@ spec:
           {
             "Effect": "Allow",
             "Principal": {
-              "Federated": "arn:aws:iam::{{ $accountId }}:oidc-provider/{{ $oidc }}"
+              "Federated": "{{ $oidcProviderArn }}"
             },
             "Action": "sts:AssumeRoleWithWebIdentity",
             "Condition": {
               "StringEquals": {
-                "{{ $oidc }}:sub": "system:serviceaccount:{{ $serviceAccountNamespace }}:{{ $serviceAccountName }}"
+                "{{ $oidc }}:sub": "{{ $serviceAccountSubject }}"
               }
             }
           }

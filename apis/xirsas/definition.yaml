@@ -27,7 +27,11 @@ spec:
                   providerConfig:
                     type: string
                 type: object
+              awsProviderConfig:
+                type: string
               clusterName:
+                type: string
+              deletionPolicy:
                 type: string
               name:
                 type: string
@@ -47,10 +51,19 @@ spec:
                     type: string
                   namespace:
                     type: string
+                required:
+                - name
+                - namespace
                 type: object
               tags:
                 type: object
                 x-kubernetes-preserve-unknown-fields: true
+            required:
+            - accountId
+            - name
+            - oidc
+            - policy
+            - serviceAccount
             type: object
           status:
             description: XIRSAStatus defines the observed state of XIRSA.

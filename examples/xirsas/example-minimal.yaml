@@ -3,10 +3,10 @@ kind: XIRSA
 metadata:
   name: example-irsa
 spec:
-  clusterName: cluster-x
-  accountId: "123456789012"
-  name: "loki-irsa"
-  oidc: "eks.amazonaws.com"
+  clusterName: minimal-cluster
+  accountId: "210987654321"
+  name: "metrics"
+  oidc: "oidc.eks.us-east-1.amazonaws.com/id/MINIMAL1234567890"
   policy: |
     {
       "Version": "2012-10-17",
@@ -30,5 +30,5 @@ spec:
       ]
     }
   serviceAccount:
-    namespace: "loki"
-    name: "loki-serviceaccount"
+    namespace: "metrics"
+    name: "metrics"

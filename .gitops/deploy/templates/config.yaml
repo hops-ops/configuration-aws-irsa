@@ -1,23 +1,23 @@
 apiVersion: pkg.crossplane.io/v1
 kind: Configuration
 metadata:
-  name: config-irsa
+  name: configuration-irsa
 spec:
-  package: ghcr.io/hops-ops/config-irsa:{{ .Values.version }}
+  package: ghcr.io/hops-ops/configuration-irsa:{{ .Values.version }}
   packagePullSecrets:
     - name: ghcr
   skipDependencyResolution: {{ .Values.skipDependencyResolution }}
 
 ---
 
-# skipDependencyResolution false would have named this hops-ops-config-irsarender
+# skipDependencyResolution false would have named this hops-ops-configuration-irsarender
 # so we need to match that format to avoid issues with the package name
 apiVersion: pkg.crossplane.io/v1
 kind: Function
 metadata:
-  name: hops-ops-config-irsarender
+  name: hops-ops-configuration-irsarender
 spec:
-  package: ghcr.io/hops-ops/config-irsa_render:{{ .Values.version }}
+  package: ghcr.io/hops-ops/configuration-irsa_render:{{ .Values.version }}
   packagePullSecrets:
     - name: ghcr
   skipDependencyResolution: {{ .Values.skipDependencyResolution }}

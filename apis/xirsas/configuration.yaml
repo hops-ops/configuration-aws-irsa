@@ -1,10 +1,10 @@
 apiVersion: meta.pkg.crossplane.io/v1alpha1
 kind: Configuration
 metadata:
-  name: config-irsa
+  name: configuration-irsa
   annotations:
     meta.crossplane.io/maintainer: Patrick Lee Scott
-    meta.crossplane.io/source: github.com/hops-ops/config-irsa
+    meta.crossplane.io/source: github.com/hops-ops/configuration-irsa
     meta.crossplane.io/description: A Configuration package that defines hops's `IRSA` installation.
 spec:
   dependsOn:

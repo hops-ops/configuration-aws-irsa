@@ -1,7 +1,7 @@
 apiVersion: apiextensions.crossplane.io/v1
 kind: Composition
 metadata:
-  name: config-irsa-v1alpha1-1
+  name: configuration-irsa-v1alpha1-1
 spec:
   compositeTypeRef:
     apiVersion: hops.ops.com.ai/v1alpha1
@@ -9,7 +9,7 @@ spec:
   mode: Pipeline
   pipeline:
   - functionRef:
-      name: hops-ops-config-irsarender
+      name: hops-ops-configuration-irsarender
     step: render
   - functionRef:
       name: crossplane-contrib-function-auto-ready

@@ -4,12 +4,14 @@ metadata:
   name: example-irsa
 spec:
   clusterName: cluster-x
+  deletionPolicy: Orphan
   aws:
-    providerConfig: cluster-x
+    providerConfig: legacy-fallback
+  awsProviderConfig: shared-aws
   accountId: "123456789012"
-  name: "loki-irsa"
-  oidc: "eks.amazonaws.com"
-  permissionsBoundary: "arn:aws:iam::aws:policy/ReadOnlyAccess"
+  name: "loki"
+  oidc: "https://oidc.eks.us-west-2.amazonaws.com/id/EXAMPLE1234567890"
+  permissionsBoundary: "arn:aws:iam::123456789012:policy/eks-boundary"
   policy: |
     {
       "Version": "2012-10-17",
@@ -35,7 +37,8 @@ spec:
   rolePrefix: "irsa-"
   policyPrefix: "irsa-"
   tags:
-    foo: bar
+    team: platform
+    service: logging
   serviceAccount:
     namespace: "loki"
-    name: "loki-serviceaccount"
+    name: "loki"
