@@ -164,7 +164,7 @@ The project includes comprehensive testing infrastructure:
 Validates XRD schemas and compositions against examples:
 
 ```bash
-crossplane beta validate apis/xirsas examples/xirsas
+crossplane beta validate apis/irsas examples/irsas
 ```
 
 ### Composition Rendering Tests

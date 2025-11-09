@@ -1,11 +1,11 @@
 apiVersion: apiextensions.crossplane.io/v1
 kind: Composition
 metadata:
-  name: configuration-aws-irsa-v1alpha1-1
+  name: irsas.aws.hops.ops.com.ai
 spec:
   compositeTypeRef:
     apiVersion: aws.hops.ops.com.ai/v1alpha1
-    kind: XIRSA
+    kind: IRSA
   mode: Pipeline
   pipeline:
   - functionRef:

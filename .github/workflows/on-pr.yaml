@@ -22,10 +22,10 @@ jobs:
     with:
       examples: |
         [
-          "examples/xirsas/example.yaml",
-          "examples/xirsas/example-minimal.yaml"
+          "examples/irsas/example.yaml",
+          "examples/irsas/example-minimal.yaml"
         ]
-      api_path: apis/xirsas
+      api_path: apis/irsas
       error_on_missing_schemas: true
 
   test:

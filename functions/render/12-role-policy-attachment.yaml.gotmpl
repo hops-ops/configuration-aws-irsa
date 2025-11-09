@@ -1,6 +1,6 @@
 ---
 
-apiVersion: iam.aws.upbound.io/v1beta1
+apiVersion: iam.aws.m.upbound.io/v1beta1
 kind: RolePolicyAttachment
 metadata:
   name: {{ $attachmentName }}
@@ -8,14 +8,15 @@ metadata:
     gotemplating.fn.crossplane.io/composition-resource-name: "irsa-role-policy-attachment"
 spec:
   providerConfigRef:
+    kind: ProviderConfig
     name: {{ $awsProviderConfig }}
-  deletionPolicy: {{ $deletionPolicy }}
+  managementPolicies: {{ toYaml $managementPolicies | nindent 4 }}
   forProvider:
     policyArnSelector:
       matchControllerRef: true
       matchLabels:
-        irsa: {{ $name }}
+        hops.ops.com.ai/irsa: {{ $name }}
     roleSelector:
       matchControllerRef: true
       matchLabels:
-        irsa: {{ $name }}
+        hops.ops.com.ai/irsa: {{ $name }}

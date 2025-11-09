@@ -1,0 +1,44 @@
+# code: language=yaml
+# yaml-language-server: $schema=../../.up/json/models/index.schema.json
+
+---
+
+apiVersion: protection.crossplane.io/v1beta1
+kind: Usage
+metadata:
+  name: {{ printf "of-role-%s-by-rpa-%s" $roleName $attachmentName }}
+  annotations:
+    gotemplating.fn.crossplane.io/composition-resource-name: "irsa-role-used-by-rpa"
+spec:
+  replayDeletion: true
+  by:
+    apiVersion: iam.aws.m.upbound.io/v1beta1
+    kind: RolePolicyAttachment
+    resourceRef:
+      name: {{ $attachmentName }}
+  of:
+    apiVersion: iam.aws.m.upbound.io/v1beta1
+    kind: Role
+    resourceRef:
+      name: {{ $roleName }}
+
+---
+
+apiVersion: protection.crossplane.io/v1beta1
+kind: Usage
+metadata:
+  name: {{ printf "of-policy-%s-by-rpa-%s" $policyName $attachmentName }}
+  annotations:
+    gotemplating.fn.crossplane.io/composition-resource-name: "irsa-policy-used-by-rpa"
+spec:
+  replayDeletion: true
+  by:
+    apiVersion: iam.aws.m.upbound.io/v1beta1
+    kind: RolePolicyAttachment
+    resourceRef:
+      name: {{ $attachmentName }}
+  of:
+    apiVersion: iam.aws.m.upbound.io/v1beta1
+    kind: Policy
+    resourceRef:
+      name: {{ $policyName }}

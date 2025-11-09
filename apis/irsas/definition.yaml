@@ -1,24 +1,20 @@
 apiVersion: apiextensions.crossplane.io/v2
 kind: CompositeResourceDefinition
 metadata:
-  name: xirsas.aws.hops.ops.com.ai
+  name: irsas.aws.hops.ops.com.ai
 spec:
+  scope: Namespaced
   group: aws.hops.ops.com.ai
   names:
-    categories:
-    - crossplane
-    kind: XIRSA
-    plural: xirsas
-  scope: Cluster
+    kind: IRSA
+    plural: irsas
   versions:
   - name: v1alpha1
     referenceable: true
     schema:
       openAPIV3Schema:
-        description: XIRSA is the Schema for the XIRSA API.
         properties:
           spec:
-            description: XIRSASpec defines the desired state of XIRSA.
             properties:
               accountId:
                 type: string
@@ -27,12 +23,21 @@ spec:
                   providerConfig:
                     type: string
                 type: object
-              awsProviderConfig:
-                type: string
               clusterName:
                 type: string
-              deletionPolicy:
-                type: string
+              managementPolicies:
+                description: ManagementPolicies for AWS resources. Defaults to ["*"] which includes all operations (Create, Observe, Update, Delete, LateInitialize). To orphan resources on deletion, use ["Create", "Observe", "Update", "LateInitialize"].
+                type: array
+                items:
+                  type: string
+                  enum:
+                    - "*"
+                    - Create
+                    - Observe
+                    - Update
+                    - Delete
+                    - LateInitialize
+                default: ["*"]
               name:
                 type: string
               oidc:
@@ -64,9 +69,9 @@ spec:
             - oidc
             - policy
             - serviceAccount
+            - managementPolicies
             type: object
           status:
-            description: XIRSAStatus defines the observed state of XIRSA.
             type: object
         required:
         - spec

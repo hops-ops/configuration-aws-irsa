@@ -1,0 +1,24 @@
+# code: language=yaml
+
+{{- if $observed }}
+apiVersion: aws.hops.ops.com.ai/v1alpha1
+kind: IRSA
+status:
+  accountId: "{{ $accountId }}"
+  oidc:
+    issuer: "{{ $oidcRaw }}"
+    providerArn: "{{ $oidcProviderArn }}"
+  serviceAccount:
+    namespace: "{{ $serviceAccountNamespace }}"
+    name: "{{ $serviceAccountName }}"
+    subject: "{{ $serviceAccountSubject }}"
+  role:
+    name: "{{ $roleName }}"
+    arn: "{{ $roleArn }}"
+    {{- if $permissionsBoundary }}
+    permissionsBoundary: "{{ $permissionsBoundary }}"
+    {{- end }}
+  policy:
+    name: "{{ $policyName }}"
+    arn: "{{ $policyArn }}"
+{{- end }}

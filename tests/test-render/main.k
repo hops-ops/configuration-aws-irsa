@@ -19,13 +19,13 @@ _items = [
         spec= {
             assertResources: [
                 {
-                    apiVersion: "iam.aws.upbound.io/v1beta1"
+                    apiVersion: "iam.aws.m.upbound.io/v1beta1"
                     kind: "Role"
                     metadata: {
                         name: "irsa-cluster-x-loki"
                     }
                     spec: {
-                        deletionPolicy: "Orphan"
+                        managementPolicies: ["*"]
                         providerConfigRef: {
                             name: "shared-aws"
                         }
@@ -41,7 +41,7 @@ _items = [
                     }
                 },
                 {
-                    apiVersion: "iam.aws.upbound.io/v1beta1"
+                    apiVersion: "iam.aws.m.upbound.io/v1beta1"
                     kind: "Policy"
                     metadata: {
                         name: "irsa-cluster-x-loki"
@@ -61,10 +61,10 @@ _items = [
                     }
                 },
                 {
-                    apiVersion: "iam.aws.upbound.io/v1beta1"
+                    apiVersion: "iam.aws.m.upbound.io/v1beta1"
                     kind: "RolePolicyAttachment"
                     metadata: {
-                        name: "cluster-x-loki-role-policy-attachment"
+                        name: "irsa-cluster-x-loki"
                     }
                     spec: {
                         providerConfigRef: {
@@ -74,22 +74,70 @@ _items = [
                             policyArnSelector: {
                                 matchControllerRef: True
                                 matchLabels: {
-                                    irsa: "loki"
+                                    "hops.ops.com.ai/irsa": "loki"
                                 }
                             }
                             roleSelector: {
                                 matchControllerRef: True
                                 matchLabels: {
-                                    irsa: "loki"
+                                    "hops.ops.com.ai/irsa": "loki"
                                 }
+                            }
+                        }
+                    }
+                },
+                {
+                    apiVersion: "protection.crossplane.io/v1beta1"
+                    kind: "Usage"
+                    metadata: {
+                        name: "of-role-irsa-cluster-x-loki-by-rpa-irsa-cluster-x-loki"
+                    }
+                    spec: {
+                        replayDeletion: True
+                        by: {
+                            apiVersion: "iam.aws.m.upbound.io/v1beta1"
+                            kind: "RolePolicyAttachment"
+                            resourceRef: {
+                                name: "irsa-cluster-x-loki"
+                            }
+                        }
+                        of: {
+                            apiVersion: "iam.aws.m.upbound.io/v1beta1"
+                            kind: "Role"
+                            resourceRef: {
+                                name: "irsa-cluster-x-loki"
+                            }
+                        }
+                    }
+                },
+                {
+                    apiVersion: "protection.crossplane.io/v1beta1"
+                    kind: "Usage"
+                    metadata: {
+                        name: "of-policy-irsa-cluster-x-loki-by-rpa-irsa-cluster-x-loki"
+                    }
+                    spec: {
+                        replayDeletion: True
+                        by: {
+                            apiVersion: "iam.aws.m.upbound.io/v1beta1"
+                            kind: "RolePolicyAttachment"
+                            resourceRef: {
+                                name: "irsa-cluster-x-loki"
+                            }
+                        }
+                        of: {
+                            apiVersion: "iam.aws.m.upbound.io/v1beta1"
+                            kind: "Policy"
+                            resourceRef: {
+                                name: "irsa-cluster-x-loki"
                             }
                         }
                     }
                 }
             ]
-            compositionPath: "apis/xirsas/composition.yaml"
-            xrPath: "examples/xirsas/example.yaml"
-            xrdPath: "apis/xirsas/definition.yaml"
+            compositionPath: "apis/irsas/composition.yaml"
+            xrPath: "examples/irsas/example.yaml"
+            xrdPath: "apis/irsas/definition.yaml"
             timeoutSeconds: 120
             validate: True
         }
@@ -99,7 +147,7 @@ _items = [
         spec= {
             assertResources: [
                 {
-                    apiVersion: "iam.aws.upbound.io/v1beta1"
+                    apiVersion: "iam.aws.m.upbound.io/v1beta1"
                     kind: "Role"
                     metadata: {
                         name: "minimal-cluster-metrics"
@@ -117,7 +165,7 @@ _items = [
                     }
                 },
                 {
-                    apiVersion: "iam.aws.upbound.io/v1beta1"
+                    apiVersion: "iam.aws.m.upbound.io/v1beta1"
                     kind: "Policy"
                     metadata: {
                         name: "minimal-cluster-metrics"
@@ -135,10 +183,10 @@ _items = [
                     }
                 },
                 {
-                    apiVersion: "iam.aws.upbound.io/v1beta1"
+                    apiVersion: "iam.aws.m.upbound.io/v1beta1"
                     kind: "RolePolicyAttachment"
                     metadata: {
-                        name: "minimal-cluster-metrics-role-policy-attachment"
+                        name: "minimal-cluster-metrics"
                     }
                     spec: {
                         providerConfigRef: {
@@ -148,22 +196,70 @@ _items = [
                             policyArnSelector: {
                                 matchControllerRef: True
                                 matchLabels: {
-                                    irsa: "metrics"
+                                    "hops.ops.com.ai/irsa": "metrics"
                                 }
                             }
                             roleSelector: {
                                 matchControllerRef: True
                                 matchLabels: {
-                                    irsa: "metrics"
+                                    "hops.ops.com.ai/irsa": "metrics"
                                 }
+                            }
+                        }
+                    }
+                },
+                {
+                    apiVersion: "protection.crossplane.io/v1beta1"
+                    kind: "Usage"
+                    metadata: {
+                        name: "of-role-minimal-cluster-metrics-by-rpa-minimal-cluster-metrics"
+                    }
+                    spec: {
+                        replayDeletion: True
+                        by: {
+                            apiVersion: "iam.aws.m.upbound.io/v1beta1"
+                            kind: "RolePolicyAttachment"
+                            resourceRef: {
+                                name: "minimal-cluster-metrics"
+                            }
+                        }
+                        of: {
+                            apiVersion: "iam.aws.m.upbound.io/v1beta1"
+                            kind: "Role"
+                            resourceRef: {
+                                name: "minimal-cluster-metrics"
+                            }
+                        }
+                    }
+                },
+                {
+                    apiVersion: "protection.crossplane.io/v1beta1"
+                    kind: "Usage"
+                    metadata: {
+                        name: "of-policy-minimal-cluster-metrics-by-rpa-minimal-cluster-metrics"
+                    }
+                    spec: {
+                        replayDeletion: True
+                        by: {
+                            apiVersion: "iam.aws.m.upbound.io/v1beta1"
+                            kind: "RolePolicyAttachment"
+                            resourceRef: {
+                                name: "minimal-cluster-metrics"
+                            }
+                        }
+                        of: {
+                            apiVersion: "iam.aws.m.upbound.io/v1beta1"
+                            kind: "Policy"
+                            resourceRef: {
+                                name: "minimal-cluster-metrics"
                             }
                         }
                     }
                 }
             ]
-            compositionPath: "apis/xirsas/composition.yaml"
-            xrPath: "examples/xirsas/example-minimal.yaml"
-            xrdPath: "apis/xirsas/definition.yaml"
+            compositionPath: "apis/irsas/composition.yaml"
+            xrPath: "examples/irsas/example-minimal.yaml"
+            xrdPath: "apis/irsas/definition.yaml"
             timeoutSeconds: 120
             validate: True
         }

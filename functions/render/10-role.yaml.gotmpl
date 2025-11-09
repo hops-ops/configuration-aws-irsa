@@ -3,18 +3,19 @@
 
 ---
 
-apiVersion: iam.aws.upbound.io/v1beta1
+apiVersion: iam.aws.m.upbound.io/v1beta1
 kind: Role
 metadata:
   name: {{ $roleName }}
   annotations:
     gotemplating.fn.crossplane.io/composition-resource-name: "irsa-role"
   labels:
-    irsa: {{ $name }}
+    hops.ops.com.ai/irsa: {{ $name }}
 spec:
   providerConfigRef:
+    kind: ProviderConfig
     name: {{ $awsProviderConfig }}
-  deletionPolicy: {{ $deletionPolicy }}
+  managementPolicies: {{ toYaml $managementPolicies | nindent 4 }}
   forProvider:
     assumeRolePolicy: |
       {

@@ -1,17 +1,18 @@
 ---
 
-apiVersion: iam.aws.upbound.io/v1beta1
+apiVersion: iam.aws.m.upbound.io/v1beta1
 kind: Policy
 metadata:
   name: {{ $policyName }}
   annotations:
     gotemplating.fn.crossplane.io/composition-resource-name: "irsa-policy"
   labels:
-    irsa: {{ $name }}
+    hops.ops.com.ai/irsa: {{ $name }}
 spec:
   providerConfigRef:
+    kind: ProviderConfig
     name: {{ $awsProviderConfig }}
-  deletionPolicy: {{ $deletionPolicy }}
+  managementPolicies: {{ toYaml $managementPolicies | nindent 4 }}
   forProvider:
     policy: |
       {{- $policy | nindent 6 }}

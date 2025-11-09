@@ -1,17 +1,13 @@
 apiVersion: aws.hops.ops.com.ai/v1alpha1
-kind: XIRSA
+kind: IRSA
 metadata:
   name: example-irsa
+  namespace: example-env
 spec:
-  clusterName: cluster-x
-  deletionPolicy: Orphan
-  aws:
-    providerConfig: legacy-fallback
-  awsProviderConfig: shared-aws
-  accountId: "123456789012"
-  name: "loki"
-  oidc: "https://oidc.eks.us-west-2.amazonaws.com/id/EXAMPLE1234567890"
-  permissionsBoundary: "arn:aws:iam::123456789012:policy/eks-boundary"
+  clusterName: minimal-cluster
+  accountId: "210987654321"
+  name: "metrics"
+  oidc: "oidc.eks.us-east-1.amazonaws.com/id/MINIMAL1234567890"
   policy: |
     {
       "Version": "2012-10-17",
@@ -34,11 +30,6 @@ spec:
         }
       ]
     }
-  rolePrefix: "irsa-"
-  policyPrefix: "irsa-"
-  tags:
-    team: platform
-    service: logging
   serviceAccount:
-    namespace: "loki"
-    name: "loki"
+    namespace: "metrics"
+    name: "metrics"

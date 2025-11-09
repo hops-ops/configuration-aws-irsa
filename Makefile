@@ -10,7 +10,7 @@ render: render-example
 render-all: render-example
 
 render-example:
-	up composition render apis/xirsas/composition.yaml examples/xirsas/example.yaml
+	up composition render apis/irsas/composition.yaml examples/irsas/example.yaml
 
 test:
 	up test run tests/*
@@ -18,17 +18,17 @@ test:
 validate: validate-composition validate-example
 
 validate-composition:
-	up composition render apis/xirsas/composition.yaml examples/xirsas/example.yaml --include-full-xr --quiet | crossplane beta validate apis/xirsas --error-on-missing-schemas -
+	up composition render apis/irsas/composition.yaml examples/irsas/example.yaml --include-full-xr --quiet | crossplane beta validate apis/irsas --error-on-missing-schemas -
 
 validate-example:
-	crossplane beta validate apis/xirsas examples/xirsas
+	crossplane beta validate apis/irsas examples/irsas
 
 publish:
 	@if [ -z "$(tag)" ]; then echo "Error: tag is not set. Usage: make publish tag=<version>"; exit 1; fi
 	up project build --push --tag $(tag)
 
 generate-definitions:
-	up xrd generate examples/xirsas/example.yaml
+	up xrd generate examples/irsas/example.yaml
 
 generate-function:
-	up function generate --language=go-templating render apis/xirsas/composition.yaml
+	up function generate --language=go-templating render apis/irsas/composition.yaml
