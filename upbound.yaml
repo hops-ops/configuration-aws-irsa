@@ -6,16 +6,12 @@ spec:
   dependsOn:
   - apiVersion: pkg.crossplane.io/v1
     kind: Provider
-    package: xpkg.crossplane.io/crossplane-contrib/provider-kubernetes
-    version: '>=v1.0.0'
-  - apiVersion: pkg.crossplane.io/v1
-    kind: Provider
-    package: xpkg.crossplane.io/crossplane-contrib/provider-helm
-    version: '>=v1.0.2'
+    package: xpkg.crossplane.io/crossplane-contrib/provider-family-aws
+    version: '>=v2.2.0'
   - apiVersion: pkg.crossplane.io/v1
     kind: Provider
     package: xpkg.crossplane.io/crossplane-contrib/provider-aws-iam
-    version: '>=v2.1.1'
+    version: '>=v2.2.0'
   - apiVersion: pkg.crossplane.io/v1
     kind: Function
     package: xpkg.crossplane.io/crossplane-contrib/function-auto-ready
@@ -28,4 +24,4 @@ spec:
 
     Configures IAM Roles for Service Accounts (IRSA) on EKS clusters.
   repository: ghcr.io/hops-ops/configuration-aws-irsa
-  source: github.com/upbound/project-template
+  source: github.com/hops-ops/configuration-aws-irsa
