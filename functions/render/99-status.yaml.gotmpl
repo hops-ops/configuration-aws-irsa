@@ -1,12 +1,14 @@
 # code: language=yaml
 
 {{- if $observed }}
+---
+
 apiVersion: aws.hops.ops.com.ai/v1alpha1
 kind: IRSA
 status:
   accountId: "{{ $accountId }}"
   oidc:
-    issuer: "{{ $oidcRaw }}"
+    issuer: "{{ $oidc }}"
     providerArn: "{{ $oidcProviderArn }}"
   serviceAccount:
     namespace: "{{ $serviceAccountNamespace }}"
@@ -14,11 +16,12 @@ status:
     subject: "{{ $serviceAccountSubject }}"
   role:
     name: "{{ $roleName }}"
-    arn: "{{ $roleArn }}"
+    arn: "{{ $observedRoleArn }}"
     {{- if $permissionsBoundary }}
     permissionsBoundary: "{{ $permissionsBoundary }}"
     {{- end }}
   policy:
     name: "{{ $policyName }}"
-    arn: "{{ $policyArn }}"
+    arn: "{{ $observedPolicyArn }}"
+
 {{- end }}

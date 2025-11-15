@@ -1,6 +1,10 @@
 # code: language=yaml
 # yaml-language-server: $schema=../../.up/json/models/index.schema.json
 
+{{- $renderRoleUsage := and $roleReady $rolePolicyAttachmentReady }}
+{{- $renderPolicyUsage := and $policyReady $rolePolicyAttachmentReady }}
+
+{{- if $renderRoleUsage }}
 ---
 
 apiVersion: protection.crossplane.io/v1beta1
@@ -22,6 +26,9 @@ spec:
     resourceRef:
       name: {{ $roleName }}
 
+{{- end }}
+
+{{- if $renderPolicyUsage }}
 ---
 
 apiVersion: protection.crossplane.io/v1beta1
@@ -42,3 +49,6 @@ spec:
     kind: Policy
     resourceRef:
       name: {{ $policyName }}
+
+{{- end }}
+

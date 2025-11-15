@@ -64,7 +64,7 @@ _items = [
                     apiVersion: "iam.aws.m.upbound.io/v1beta1"
                     kind: "RolePolicyAttachment"
                     metadata: {
-                        name: "irsa-cluster-x-loki"
+                        name: "cluster-x-loki"
                     }
                     spec: {
                         providerConfigRef: {
@@ -82,54 +82,6 @@ _items = [
                                 matchLabels: {
                                     "hops.ops.com.ai/irsa": "loki"
                                 }
-                            }
-                        }
-                    }
-                },
-                {
-                    apiVersion: "protection.crossplane.io/v1beta1"
-                    kind: "Usage"
-                    metadata: {
-                        name: "of-role-irsa-cluster-x-loki-by-rpa-irsa-cluster-x-loki"
-                    }
-                    spec: {
-                        replayDeletion: True
-                        by: {
-                            apiVersion: "iam.aws.m.upbound.io/v1beta1"
-                            kind: "RolePolicyAttachment"
-                            resourceRef: {
-                                name: "irsa-cluster-x-loki"
-                            }
-                        }
-                        of: {
-                            apiVersion: "iam.aws.m.upbound.io/v1beta1"
-                            kind: "Role"
-                            resourceRef: {
-                                name: "irsa-cluster-x-loki"
-                            }
-                        }
-                    }
-                },
-                {
-                    apiVersion: "protection.crossplane.io/v1beta1"
-                    kind: "Usage"
-                    metadata: {
-                        name: "of-policy-irsa-cluster-x-loki-by-rpa-irsa-cluster-x-loki"
-                    }
-                    spec: {
-                        replayDeletion: True
-                        by: {
-                            apiVersion: "iam.aws.m.upbound.io/v1beta1"
-                            kind: "RolePolicyAttachment"
-                            resourceRef: {
-                                name: "irsa-cluster-x-loki"
-                            }
-                        }
-                        of: {
-                            apiVersion: "iam.aws.m.upbound.io/v1beta1"
-                            kind: "Policy"
-                            resourceRef: {
-                                name: "irsa-cluster-x-loki"
                             }
                         }
                     }
@@ -204,54 +156,6 @@ _items = [
                                 matchLabels: {
                                     "hops.ops.com.ai/irsa": "metrics"
                                 }
-                            }
-                        }
-                    }
-                },
-                {
-                    apiVersion: "protection.crossplane.io/v1beta1"
-                    kind: "Usage"
-                    metadata: {
-                        name: "of-role-minimal-cluster-metrics-by-rpa-minimal-cluster-metrics"
-                    }
-                    spec: {
-                        replayDeletion: True
-                        by: {
-                            apiVersion: "iam.aws.m.upbound.io/v1beta1"
-                            kind: "RolePolicyAttachment"
-                            resourceRef: {
-                                name: "minimal-cluster-metrics"
-                            }
-                        }
-                        of: {
-                            apiVersion: "iam.aws.m.upbound.io/v1beta1"
-                            kind: "Role"
-                            resourceRef: {
-                                name: "minimal-cluster-metrics"
-                            }
-                        }
-                    }
-                },
-                {
-                    apiVersion: "protection.crossplane.io/v1beta1"
-                    kind: "Usage"
-                    metadata: {
-                        name: "of-policy-minimal-cluster-metrics-by-rpa-minimal-cluster-metrics"
-                    }
-                    spec: {
-                        replayDeletion: True
-                        by: {
-                            apiVersion: "iam.aws.m.upbound.io/v1beta1"
-                            kind: "RolePolicyAttachment"
-                            resourceRef: {
-                                name: "minimal-cluster-metrics"
-                            }
-                        }
-                        of: {
-                            apiVersion: "iam.aws.m.upbound.io/v1beta1"
-                            kind: "Policy"
-                            resourceRef: {
-                                name: "minimal-cluster-metrics"
                             }
                         }
                     }

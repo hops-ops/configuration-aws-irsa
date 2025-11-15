@@ -22,9 +22,11 @@ spec:
                 properties:
                   providerConfig:
                     type: string
+                    description: By default, the clusterName is used to determine the AWS providerConfig. If you want to use a different providerConfig, specify it here.
                 type: object
               clusterName:
                 type: string
+                description: The name of the EKS cluster. This is used to determine providerConfigs if they are not specified.
               managementPolicies:
                 description: ManagementPolicies for AWS resources. Defaults to ["*"] which includes all operations (Create, Observe, Update, Delete, LateInitialize). To orphan resources on deletion, use ["Create", "Observe", "Update", "LateInitialize"].
                 type: array
@@ -72,6 +74,41 @@ spec:
             - managementPolicies
             type: object
           status:
+            properties:
+              accountId:
+                type: string
+              oidc:
+                properties:
+                  issuer:
+                    type: string
+                  providerArn:
+                    type: string
+                type: object
+              policy:
+                properties:
+                  arn:
+                    type: string
+                  name:
+                    type: string
+                type: object
+              role:
+                properties:
+                  arn:
+                    type: string
+                  name:
+                    type: string
+                  permissionsBoundary:
+                    type: string
+                type: object
+              serviceAccount:
+                properties:
+                  name:
+                    type: string
+                  namespace:
+                    type: string
+                  subject:
+                    type: string
+                type: object
             type: object
         required:
         - spec

@@ -1,34 +1,34 @@
-# Get the observed composite resource into a variable. This can be used in any
-# subsequent templates.
+# code: language=yaml
+# yaml-language-server: $schema=../../.up/json/models/index.schema.json
+
 {{ $xr := getCompositeResource . }}
 {{ $spec := $xr.spec }}
 
 {{ $clusterName := $spec.clusterName | default "" }}
-# managementPolicies defaults to an array with '*' as the only element.
 {{ $managementPolicies := $spec.managementPolicies | default (list "*") }}
 
-# Provider Configs (defaults to spec.name or "default")
 {{ $aws := $spec.aws | default (dict) }}
 {{ $awsProviderConfig := $aws.providerConfig | default $clusterName | default "default" }}
 
 {{ $accountId := $spec.accountId | default "" }}
 {{ $name := $spec.name | default "" }}
+
 {{ $oidcRaw := $spec.oidc | default "" }}
-# Normalise issuer so it can be reused in ARNs and StringEquals blocks.
+# Normalise oidc string by removing http(s):// prefix and trailing slash (if they exist)
 {{ $oidcNoHttps := trimPrefix "https://" $oidcRaw }}
 {{ $oidcNoHttp := trimPrefix "http://" $oidcNoHttps }}
 {{ $oidc := trimSuffix "/" $oidcNoHttp }}
+{{ $oidcProviderArn := printf "arn:aws:iam::%s:oidc-provider/%s" $accountId $oidc }}
+
 {{ $permissionsBoundary := $spec.permissionsBoundary }}
+
 {{ $policy := $spec.policy | default "" }}
 {{ $policyPrefix := $spec.policyPrefix | default "" }}
 {{ $rolePrefix := $spec.rolePrefix | default "" }}
-
 {{ $roleBaseName := join "-" (compact (list $clusterName $name)) }}
 {{ $policyName := printf "%s%s" $policyPrefix $roleBaseName }}
 {{ $roleName := printf "%s%s" $rolePrefix $roleBaseName }}
-{{ $attachmentName := $roleName }}
-
-{{ $oidcProviderArn := printf "arn:aws:iam::%s:oidc-provider/%s" $accountId $oidc }}
+{{ $attachmentName := $roleBaseName }}
 
 {{ $defaultAWSTags := dict "hops" "true" }}
 {{ $tags := merge $defaultAWSTags ($spec.tags | default (dict)) }}
@@ -37,28 +37,3 @@
 {{ $serviceAccountName := $serviceAccount.name | default "" }}
 {{ $serviceAccountNamespace := $serviceAccount.namespace | default "" }}
 {{ $serviceAccountSubject := printf "system:serviceaccount:%s:%s" $serviceAccountNamespace $serviceAccountName }}
-
-# Observed resources for status projection
-{{ $observed := $.observed.resources | default (dict) }}
-{{ $roleArn := "Pending" }}
-{{ $policyArn := "Pending" }}
-
-{{ with get $observed "irsa-role" }}
-  {{ $resource := .resource | default (dict) }}
-  {{ $status := $resource.status | default (dict) }}
-  {{ $atProvider := $status.atProvider | default (dict) }}
-  {{ $candidateArn := $atProvider.arn | default "" }}
-  {{ if $candidateArn }}
-    {{ $roleArn = $candidateArn }}
-  {{ end }}
-{{ end }}
-
-{{ with get $observed "irsa-policy" }}
-  {{ $resource := .resource | default (dict) }}
-  {{ $status := $resource.status | default (dict) }}
-  {{ $atProvider := $status.atProvider | default (dict) }}
-  {{ $candidateArn := $atProvider.arn | default "" }}
-  {{ if $candidateArn }}
-    {{ $policyArn = $candidateArn }}
-  {{ end }}
-{{ end }}

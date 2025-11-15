@@ -2,3 +2,4 @@ _output
 .venv
 .up
 .tmp
+**/aws-creds
