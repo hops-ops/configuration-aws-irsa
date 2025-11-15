@@ -7,7 +7,7 @@ import models.io.upbound.dev.meta.v1alpha1 as metav1alpha1
 import models.io.upbound.dev.meta.v2alpha1 as metav2alpha1
 import models.k8s.apimachinery.pkg.apis.meta.v1 as metav1
 
-_now = str(math.floor(datetime.ticks()))
+_now = str(int(math.floor(datetime.ticks())))
 
 _creds = file.read("aws-creds")
 _base64_creds = base64.encode(_creds)
