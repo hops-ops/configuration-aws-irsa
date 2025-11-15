@@ -12,12 +12,6 @@ _files_str = ", ".join(_files)
 _creds = file.read("aws-creds")
 _base64_creds = base64.encode(_creds)
 
-
-
-# _file_exists = file.exists(_workdir + "/creds")
-# _credential_file = file.read(_workdir + "/creds")
-# _encoded_credential_file = base64.encode(_credential_file)
-
 _test_policy_document = "{\n  \"Version\": \"2012-10-17\",\n  \"Statement\": [\n    {\n      \"Effect\": \"Allow\",\n      \"Action\": [\"s3:GetObject\"],\n      \"Resource\": [\"arn:aws:s3:::example-bucket/*\"]\n    }\n  ]\n}"
 
 

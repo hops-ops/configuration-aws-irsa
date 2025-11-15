@@ -2,4 +2,4 @@ _output
 .venv
 .up
 .tmp
-tests/e2etest-irsa/aws-creds
+**/aws-creds
