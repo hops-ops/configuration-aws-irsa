@@ -74,6 +74,41 @@ spec:
             - managementPolicies
             type: object
           status:
+            properties:
+              accountId:
+                type: string
+              oidc:
+                properties:
+                  issuer:
+                    type: string
+                  providerArn:
+                    type: string
+                type: object
+              policy:
+                properties:
+                  arn:
+                    type: string
+                  name:
+                    type: string
+                type: object
+              role:
+                properties:
+                  arn:
+                    type: string
+                  name:
+                    type: string
+                  permissionsBoundary:
+                    type: string
+                type: object
+              serviceAccount:
+                properties:
+                  name:
+                    type: string
+                  namespace:
+                    type: string
+                  subject:
+                    type: string
+                type: object
             type: object
         required:
         - spec

@@ -71,24 +71,24 @@ _items = [
                         creds: _base64_creds
                     }
                 },
-                # {
-                #     apiVersion: "aws.m.upbound.io/v1beta1"
-                #     kind: "ProviderConfig"
-                #     metadata: {
-                #         name: "default"
-                #         namespace: "default"
-                #     }
-                #     spec: {
-                #         credentials: {
-                #             source: "Secret"
-                #             secretRef: {
-                #                 namespace: "default"
-                #                 name: "aws-creds"
-                #                 key: "creds"
-                #             }
-                #         }
-                #     }
-                # }
+                {
+                    apiVersion: "aws.m.upbound.io/v1beta1"
+                    kind: "ProviderConfig"
+                    metadata: {
+                        name: "default"
+                        namespace: "default"
+                    }
+                    spec: {
+                        credentials: {
+                            source: "Secret"
+                            secretRef: {
+                                namespace: "default"
+                                name: "aws-creds"
+                                key: "creds"
+                            }
+                        }
+                    }
+                }
             ]
             skipDelete: False
             timeoutSeconds: 4500

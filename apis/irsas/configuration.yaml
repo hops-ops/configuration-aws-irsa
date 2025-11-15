@@ -8,8 +8,6 @@ metadata:
     meta.crossplane.io/description: A Configuration package that defines hops's `IRSA` installation.
 spec:
   dependsOn:
-  - provider: ghcr.io/crossplane-contrib/provider-family-aws
-    version: ">=v2.2.0"
   - provider: ghcr.io/crossplane-contrib/provider-aws-iam
     version: ">=v2.2.0"
   - function: xpkg.crossplane.io/crossplane-contrib/function-auto-ready
