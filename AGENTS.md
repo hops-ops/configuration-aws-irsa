@@ -1,24 +1,17 @@
 # IRSA Config Agent Guide
 
-This repository publishes the `XIRSA` configuration package. Use this guide when updating schemas, templates, or automation for IAM Roles for Service Accounts.
+This repository publishes the `IRSA` configuration package. Use this guide when updating schemas, templates, or automation for IAM Roles for Service Accounts.
 
 ## Repository Layout
 
-- `apis/`: CRDs, definitions, and composition for `XIRSA`. Treat these files as source of truth for the released package.
+- `apis/`: CRDs, definitions, and composition for `IRSA`. Treat these files as source of truth for the released package.
 - `examples/`: Renderable composite examples that demonstrate both minimal and fully featured specs. Keep them in sync with the schema.
 - `functions/render/`: Go-template pipeline. Files execute in lexical order (`00-`, `10-`, `20-`), so leave numeric gaps to simplify future inserts.
-- `tests/`: KCL-based regression tests executed via `up test`.
-- `.github/` / `.gitops/`: CI and GitOps automation. Maintain structural parity across the two directories.
+- `tests/test*`: KCL-based regression tests executed via `up test`.
+- `tests/e2etest*`: KCL-based regression tests executed via `up test` with `--e2e` flag. Expects `aws-creds` file to exist (but gitignored)
+- `.github/`: Github workflows
+- `.gitops/`: GitOps automation usage.
 - `_output/`, `.up/`: Generated artefacts. Remove with `make clean` when needed.
-
-## XIRSA Contract
-
-- Required spec fields: `accountId`, `name`, `oidc`, `policy`, and `serviceAccount.{namespace,name}`. The schema enforces these to fail fast on missing inputs.
-- `clusterName` seeds provider config fallbacks and resource name alignment. Leave it empty only in advanced scenarios.
-- `awsProviderConfig` takes priority. If unset, `aws.providerConfig` is respected; otherwise the templates fall back to `clusterName`, then `"default"`.
-- `rolePrefix` and `policyPrefix` are optional. The templates join `[clusterName, name]` with `-` and prepend the prefixes when present.
-- All IAM resources merge user tags with the default `{"hops": "true"}` map.
-- OIDC issuers may be provided with or without a scheme. Templates strip `https://` / `http://` and trailing slashes so the value can be re-used in ARNs and `StringEquals` statements.
 
 ## Rendering Guidelines
 
@@ -36,12 +29,26 @@ This repository publishes the `XIRSA` configuration package. Use this guide when
 - Use `assertResources` to lock the behaviour you care about. Provide only the fields under test so future changes remain flexible elsewhere.
 - Run `make test` (or `up test run tests/*`) after touching templates or examples.
 
+## E2E Testing
+
+- Tests live under `tests/e2etest-irsa` and are invoked through `up test ... --e2e`, so the Upbound CLI must be authenticated and able to reach your control plane.
+- Provide real AWS credentials via `tests/e2etest-irsa/aws-creds` (gitignored). The file must contain a `[default]` profile understood by the AWS SDK, for example:
+
+  ```ini
+  [default]
+  aws_access_key_id = <access key>
+  aws_secret_access_key = <secret key>
+  ```
+
+- Run `make e2e` (or `up test run tests/e2etest-irsa --e2e`) from the repo root to execute the suite. The harness uploads the manifest in `tests/e2etest-irsa/main.k`, injects the `aws-creds` Secret, and provisions a `ProviderConfig` so the test IRSA composition can reach AWS.
+- The spec sets `skipDelete: false`, so resources are cleaned up automatically, but double-check for any leaked IAM roles or service accounts in the target account and remove them manually if the test aborts early.
+- Never commit the `aws-creds` file; it is ignored on purpose and should contain only disposable test credentials.
+
 ## Development Workflow
 
 - `make render` – render the default example.
 - `make validate` – run schema validation against the XRD and examples.
 - `make test` – execute the regression suite.
-- `make publish tag=<version>` – build and push the package image.
-- Keep `.github/` and `.gitops/` automation aligned when updating workflows.
+- `make e2e` - execute e2e tests.
 
 Document behavioural changes in `README.md` and refresh `examples/` whenever the schema shifts.

@@ -14,7 +14,7 @@ render-example:
 	up composition render --xrd=apis/irsas/definition.yaml apis/irsas/composition.yaml examples/irsas/example.yaml
 
 test:
-	up test run tests/*
+	up test run tests/test*
 
 validate: validate-composition validate-example
 
@@ -35,4 +35,4 @@ generate-function:
 	up function generate --language=go-templating render apis/irsas/composition.yaml
 
 e2e:
-	up test run tests/* --e2e
+	up test run tests/e2etest* --e2e

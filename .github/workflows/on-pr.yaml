@@ -32,7 +32,7 @@ jobs:
     uses: unbounded-tech/workflows-crossplane/.github/workflows/test.yaml@v0.7.0
   
   e2e:
-    uses: unbounded-tech/workflows-crossplane/.github/workflows/e2e-aws.yaml@v0.7.0
+    uses: unbounded-tech/workflows-crossplane/.github/workflows/e2e-aws.yaml@feat/e2e-cleanup
     secrets:
       AWS_ACCESS_KEY_ID: ${{ secrets.AWS_ACCESS_KEY_ID }}
       AWS_SECRET_ACCESS_KEY: ${{ secrets.AWS_SECRET_ACCESS_KEY }}

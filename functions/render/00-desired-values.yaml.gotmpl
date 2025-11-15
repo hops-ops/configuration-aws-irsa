@@ -3,6 +3,7 @@
 
 {{ $xr := getCompositeResource . }}
 {{ $spec := $xr.spec }}
+{{ $metadata := $xr.metadata | default (dict) }}
 
 {{ $clusterName := $spec.clusterName | default "" }}
 {{ $managementPolicies := $spec.managementPolicies | default (list "*") }}
@@ -11,7 +12,8 @@
 {{ $awsProviderConfig := $aws.providerConfig | default $clusterName | default "default" }}
 
 {{ $accountId := $spec.accountId | default "" }}
-{{ $name := $spec.name | default "" }}
+{{ $metadataName := $metadata.name | default "" }}
+{{ $name := default $metadataName | default "" }}
 
 {{ $oidcRaw := $spec.oidc | default "" }}
 # Normalise oidc string by removing http(s):// prefix and trailing slash (if they exist)
@@ -23,12 +25,16 @@
 {{ $permissionsBoundary := $spec.permissionsBoundary }}
 
 {{ $policy := $spec.policy | default "" }}
-{{ $policyPrefix := $spec.policyPrefix | default "" }}
 {{ $rolePrefix := $spec.rolePrefix | default "" }}
-{{ $roleBaseName := join "-" (compact (list $clusterName $name)) }}
-{{ $policyName := printf "%s%s" $policyPrefix $roleBaseName }}
-{{ $roleName := printf "%s%s" $rolePrefix $roleBaseName }}
-{{ $attachmentName := $roleBaseName }}
+{{ $policyPrefix := $spec.policyPrefix | default "" }}
+{{ $roleNameOverride := $spec.roleNameOverride | default "" }}
+{{ $policyNameOverride := $spec.policyNameOverride | default "" }}
+{{ $baseName := join "-" (compact (list $clusterName $name)) }}
+{{ $roleNameDefault := printf "%s%s" $rolePrefix $baseName }}
+{{ $policyNameDefault := printf "%s%s" $policyPrefix $baseName }}
+{{ $roleName := $roleNameOverride | default $roleNameDefault }}
+{{ $policyName := $policyNameOverride | default $policyNameDefault }}
+{{ $attachmentName := $baseName }}
 
 {{ $defaultAWSTags := dict "hops" "true" }}
 {{ $tags := merge $defaultAWSTags ($spec.tags | default (dict)) }}

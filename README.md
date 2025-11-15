@@ -6,7 +6,7 @@
 ## Features
 
 - Creates IAM roles with the correct web identity trust policy for an EKS OIDC issuer.
-- Attaches caller-supplied IAM policies and supports optional `rolePrefix`, `policyPrefix`, and permissions boundaries.
+- Attaches caller-supplied IAM policies and supports optional `rolePrefix`, `policyPrefix`, overrides via `roleNameOverride`/`policyNameOverride`, and permissions boundaries.
 - Accepts AWS provider configs via `awsProviderConfig` or `aws.providerConfig`, defaulting to the composite's `clusterName`.
 - Automatically merges the `hops: "true"` tag with any caller-provided tags.
 - Ships with validation, testing, and publishing automation.
@@ -81,6 +81,8 @@ spec:
       ]
     }
 ```
+
+By default the IAM role, policy, and attachment use `<clusterName>-<name>` where `name` comes from `spec.name` or `metadata.name`. Set `rolePrefix` / `policyPrefix` to prepend strings to those defaults, or use `roleNameOverride` / `policyNameOverride` to supply the exact AWS names (bypassing prefixes entirely) when you need full control.
 
 ## Local Development
 

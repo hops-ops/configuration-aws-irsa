@@ -40,8 +40,6 @@ spec:
                     - Delete
                     - LateInitialize
                 default: ["*"]
-              name:
-                type: string
               oidc:
                 type: string
               permissionsBoundary:
@@ -50,7 +48,11 @@ spec:
                 type: string
               policyPrefix:
                 type: string
+              policyNameOverride:
+                type: string
               rolePrefix:
+                type: string
+              roleNameOverride:
                 type: string
               serviceAccount:
                 properties:
@@ -67,7 +69,6 @@ spec:
                 x-kubernetes-preserve-unknown-fields: true
             required:
             - accountId
-            - name
             - oidc
             - policy
             - serviceAccount
