@@ -56,7 +56,7 @@ _items = [
                     apiVersion: "aws.m.upbound.io/v1beta1"
                     kind: "ProviderConfig"
                     metadata: {
-                        name: "default"
+                        name: _test_cluster
                         namespace: "default"
                     }
                     spec: {
