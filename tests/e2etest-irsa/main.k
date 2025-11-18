@@ -9,7 +9,7 @@ import models.k8s.apimachinery.pkg.apis.meta.v1 as metav1
 
 _now = str(int(math.floor(datetime.ticks())))
 
-_creds = file.read("aws-creds")
+_creds = file.read("secrets/aws-creds")
 _base64_creds = base64.encode(_creds)
 
 _test_policy_document = "{\n  \"Version\": \"2012-10-17\",\n  \"Statement\": [\n    {\n      \"Effect\": \"Allow\",\n      \"Action\": [\"s3:GetObject\"],\n      \"Resource\": [\"arn:aws:s3:::example-bucket/*\"]\n    }\n  ]\n}"
