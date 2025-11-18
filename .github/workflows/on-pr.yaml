@@ -9,6 +9,13 @@ on:
       - opened
       - reopened
       - synchronize
+    paths:
+      - 'apis/**'
+      - 'examples/**'
+      - 'tests/**'
+      - 'functions/**'
+      - '.github/workflows/on-pr.yaml'
+      - 'upbound.yaml'
 
 permissions:
   packages: write
