@@ -1,9 +1,9 @@
 apiVersion: pkg.crossplane.io/v1
 kind: Configuration
 metadata:
-  name: configuration-aws-irsa
+  name: aws-irsa
 spec:
-  package: ghcr.io/hops-ops/configuration-aws-irsa:{{ .Values.version }}
+  package: ghcr.io/hops-ops/aws-irsa:{{ .Values.version }}
   packagePullSecrets:
     - name: ghcr
   skipDependencyResolution: {{ .Values.skipDependencyResolution }}
@@ -15,9 +15,9 @@ spec:
 apiVersion: pkg.crossplane.io/v1
 kind: Function
 metadata:
-  name: hops-ops-configuration-aws-irsarender
+  name: hops-ops-aws-irsarender
 spec:
-  package: ghcr.io/hops-ops/configuration-aws-irsa_render:{{ .Values.version }}
+  package: ghcr.io/hops-ops/aws-irsa_render:{{ .Values.version }}
   packagePullSecrets:
     - name: ghcr
   skipDependencyResolution: {{ .Values.skipDependencyResolution }}

@@ -9,7 +9,7 @@ spec:
   mode: Pipeline
   pipeline:
   - functionRef:
-      name: hops-ops-configuration-aws-irsarender
+      name: hops-ops-aws-irsarender
     step: render
   - functionRef:
       name: crossplane-contrib-function-auto-ready

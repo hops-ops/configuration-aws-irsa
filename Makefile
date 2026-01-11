@@ -1,6 +1,6 @@
 SHELL := /bin/bash
 
-PACKAGE ?= configuration-aws-irsa
+PACKAGE ?= aws-irsa
 XRD_DIR := apis/irsas
 COMPOSITION := $(XRD_DIR)/composition.yaml
 DEFINITION := $(XRD_DIR)/definition.yaml

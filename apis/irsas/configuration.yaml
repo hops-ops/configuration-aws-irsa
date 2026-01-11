@@ -1,10 +1,10 @@
 apiVersion: meta.pkg.crossplane.io/v1alpha1
 kind: Configuration
 metadata:
-  name: configuration-aws-irsa
+  name: aws-irsa
   annotations:
     meta.crossplane.io/maintainer: Patrick Lee Scott <pat@patscott.io>
-    meta.crossplane.io/source: github.com/hops-ops/configuration-aws-irsa
+    meta.crossplane.io/source: github.com/hops-ops/aws-irsa
     meta.crossplane.io/description: Configures IAM Roles for Service Accounts (IRSA) on EKS clusters.
 spec:
   dependsOn:
