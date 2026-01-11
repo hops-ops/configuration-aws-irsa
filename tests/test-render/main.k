@@ -461,12 +461,12 @@ _items = [
                 {
                     apiVersion = "protection.crossplane.io/v1beta1"
                     kind = "Usage"
-                    metadata.name = "usage-test-role-protects-attachment"
+                    metadata.name = "usage-test-delete-attachment-before-role"
                 }
                 {
                     apiVersion = "protection.crossplane.io/v1beta1"
                     kind = "Usage"
-                    metadata.name = "usage-test-policy-protects-attachment"
+                    metadata.name = "usage-test-delete-attachment-before-policy"
                 }
             ]
         }
