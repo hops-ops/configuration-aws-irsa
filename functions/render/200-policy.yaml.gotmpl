@@ -1,4 +1,3 @@
-{{- if $state.irsa.policy.render }}
 ---
 apiVersion: iam.aws.m.upbound.io/v1beta1
 kind: Policy
@@ -19,4 +18,3 @@ spec:
   providerConfigRef:
     name: {{ $state.irsa.providerConfig.name }}
     kind: {{ $state.irsa.providerConfig.kind }}
-{{- end }}

@@ -1,4 +1,3 @@
-{{- if $state.irsa.role.render }}
 ---
 apiVersion: iam.aws.m.upbound.io/v1beta1
 kind: Role
@@ -22,4 +21,3 @@ spec:
   providerConfigRef:
     name: {{ $state.irsa.providerConfig.name }}
     kind: {{ $state.irsa.providerConfig.kind }}
-{{- end }}

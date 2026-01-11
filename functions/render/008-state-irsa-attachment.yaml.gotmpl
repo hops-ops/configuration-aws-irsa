@@ -1,11 +1,7 @@
 {{- $eff := $state.spec.effective }}
 
-{{- /* Attachment always renders */ -}}
-{{- $render := true }}
-
 {{- /* Set irsa.attachment slice */ -}}
 {{- $attachment := dict
-  "render" $render
   "name" $eff.attachment.name
   "ready" $state.observed.attachment.ready
 }}

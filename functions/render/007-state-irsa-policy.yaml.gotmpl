@@ -1,11 +1,7 @@
 {{- $eff := $state.spec.effective }}
 
-{{- /* Policy always renders */ -}}
-{{- $render := true }}
-
 {{- /* Set irsa.policy slice */ -}}
 {{- $policy := dict
-  "render" $render
   "name" $eff.policy.name
   "document" $eff.policy.document
   "externalName" $eff.policy.externalName

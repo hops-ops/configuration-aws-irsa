@@ -1,4 +1,4 @@
-# Role is Ready in step 1
+# Step 1: Role is Ready
 apiVersion: iam.aws.m.upbound.io/v1beta1
 kind: Role
 metadata:

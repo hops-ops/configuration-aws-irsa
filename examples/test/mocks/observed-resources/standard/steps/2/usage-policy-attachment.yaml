@@ -1,0 +1,13 @@
+# Step 2: Usage for Policy protection is Ready
+apiVersion: protection.crossplane.io/v1beta1
+kind: Usage
+metadata:
+  name: loki-delete-attachment-before-policy
+  annotations:
+    crossplane.io/composition-resource-name: usage-policy-attachment
+status:
+  conditions:
+  - type: Ready
+    status: "True"
+  - type: Synced
+    status: "True"

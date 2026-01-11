@@ -1,4 +1,4 @@
-# Step 2: Attachment is Ready
+# Step 1: Attachment is Ready
 apiVersion: iam.aws.m.upbound.io/v1beta1
 kind: RolePolicyAttachment
 metadata:

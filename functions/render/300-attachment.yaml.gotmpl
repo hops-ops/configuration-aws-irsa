@@ -1,4 +1,3 @@
-{{- if $state.irsa.attachment.render }}
 ---
 apiVersion: iam.aws.m.upbound.io/v1beta1
 kind: RolePolicyAttachment
@@ -21,15 +20,14 @@ spec:
   providerConfigRef:
     name: {{ $state.irsa.providerConfig.name }}
     kind: {{ $state.irsa.providerConfig.kind }}
-{{- end }}
 
-{{- /* Usage: Role protects RolePolicyAttachment */ -}}
+{{- /* Usage: Delete attachment before role */ -}}
 {{- if and $state.irsa.role.ready $state.irsa.attachment.ready }}
 ---
 apiVersion: protection.crossplane.io/v1beta1
 kind: Usage
 metadata:
-  name: {{ $state.irsa.name }}-role-protects-attachment
+  name: {{ $state.irsa.name }}-delete-attachment-before-role
   annotations:
     {{ setResourceNameAnnotation "usage-role-attachment" }}
 spec:
@@ -46,13 +44,13 @@ spec:
       name: {{ $state.irsa.attachment.name }}
 {{- end }}
 
-{{- /* Usage: Policy protects RolePolicyAttachment */ -}}
+{{- /* Usage: Delete attachment before policy */ -}}
 {{- if and $state.irsa.policy.ready $state.irsa.attachment.ready }}
 ---
 apiVersion: protection.crossplane.io/v1beta1
 kind: Usage
 metadata:
-  name: {{ $state.irsa.name }}-policy-protects-attachment
+  name: {{ $state.irsa.name }}-delete-attachment-before-policy
   annotations:
     {{ setResourceNameAnnotation "usage-policy-attachment" }}
 spec:
