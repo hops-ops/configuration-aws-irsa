@@ -18,15 +18,16 @@ spec:
             properties:
               accountId:
                 type: string
-              aws:
-                properties:
-                  providerConfig:
-                    type: string
-                    description: By default, the clusterName is used to determine the AWS providerConfig. If you want to use a different providerConfig, specify it here.
-                type: object
+                description: AWS account ID where the OIDC provider is configured.
               clusterName:
                 type: string
-                description: The name of the EKS cluster. This is used to determine providerConfigs if they are not specified.
+                description: The name of the EKS cluster. Used as fallback for providerConfigRef.name and as part of default resource naming.
+              labels:
+                type: object
+                description: Custom labels applied to all managed resources. Merged with default labels (hops.ops.com.ai/managed, hops.ops.com.ai/irsa).
+                additionalProperties:
+                  type: string
+                x-kubernetes-preserve-unknown-fields: true
               managementPolicies:
                 description: ManagementPolicies for AWS resources. Defaults to ["*"] which includes all operations (Create, Observe, Update, Delete, LateInitialize). To orphan resources on deletion, use ["Create", "Observe", "Update", "LateInitialize"].
                 type: array
@@ -42,19 +43,58 @@ spec:
                 default: ["*"]
               oidc:
                 type: string
+                description: OIDC issuer URL for the EKS cluster (with or without https:// prefix).
               permissionsBoundary:
                 type: string
+                description: ARN of the IAM permissions boundary to attach to the role.
               policy:
-                type: string
-              policyPrefix:
-                type: string
-              policyNameOverride:
-                type: string
-              rolePrefix:
-                type: string
-              roleNameOverride:
-                type: string
+                type: object
+                description: IAM policy configuration for the IRSA role.
+                properties:
+                  document:
+                    type: string
+                    description: The IAM policy document (JSON string).
+                  namePrefix:
+                    type: string
+                    description: Prefix to prepend to the default policy name.
+                  nameOverride:
+                    type: string
+                    description: Exact policy name to use (bypasses prefix and default naming).
+                  externalName:
+                    type: string
+                    description: External name of existing IAM policy to import. Leave empty to create new.
+                required:
+                - document
+                type: object
+              providerConfigRef:
+                type: object
+                description: Reference to the AWS ProviderConfig.
+                properties:
+                  name:
+                    type: string
+                    description: Name of the ProviderConfig. Defaults to clusterName if not specified.
+                  kind:
+                    type: string
+                    description: Kind of the ProviderConfig.
+                    default: ProviderConfig
+                type: object
+              role:
+                type: object
+                description: IAM role configuration.
+                properties:
+                  namePrefix:
+                    type: string
+                    description: Prefix to prepend to the default role name.
+                  nameOverride:
+                    type: string
+                    description: Exact role name to use (bypasses prefix and default naming).
+                  externalName:
+                    type: string
+                    description: External name of existing IAM role to import. Leave empty to create new.
+                type: object
               serviceAccount:
+                type: object
+                description: Kubernetes service account that will assume the IAM role.
                 properties:
                   name:
                     type: string
@@ -66,33 +106,37 @@ spec:
                 type: object
               tags:
                 type: object
+                description: AWS tags to apply to all resources. Merged with default tag (hops=true).
                 x-kubernetes-preserve-unknown-fields: true
             required:
             - accountId
             - oidc
             - policy
             - serviceAccount
-            - managementPolicies
             type: object
           status:
             properties:
+              ready:
+                type: boolean
+                description: Whether all composed resources are ready.
               accountId:
                 type: string
               oidc:
+                type: object
                 properties:
                   issuer:
                     type: string
                   providerArn:
                     type: string
-                type: object
               policy:
+                type: object
                 properties:
                   arn:
                     type: string
                   name:
                     type: string
-                type: object
               role:
+                type: object
                 properties:
                   arn:
                     type: string
@@ -100,8 +144,8 @@ spec:
                     type: string
                   permissionsBoundary:
                     type: string
-                type: object
               serviceAccount:
+                type: object
                 properties:
                   name:
                     type: string
@@ -109,7 +153,16 @@ spec:
                     type: string
                   subject:
                     type: string
+              spec:
                 type: object
+                description: Debugging information showing raw and effective spec values.
+                properties:
+                  raw:
+                    type: object
+                    x-kubernetes-preserve-unknown-fields: true
+                  effective:
+                    type: object
+                    x-kubernetes-preserve-unknown-fields: true
             type: object
         required:
         - spec

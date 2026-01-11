@@ -1,0 +1,20 @@
+{{- /* Extract attachment observation */ -}}
+{{- $raw := $.observed.resources | default dict }}
+{{- $entry := get $raw "attachment" | default dict }}
+{{- $resource := $entry.resource | default dict }}
+{{- $status := $resource.status | default dict }}
+{{- $atProvider := $status.atProvider | default dict }}
+
+{{- /* Check readiness from conditions */ -}}
+{{- $ready := false }}
+{{- range ($status.conditions | default list) }}
+  {{- if and (eq .type "Ready") (eq .status "True") }}
+    {{- $ready = true }}
+  {{- end }}
+{{- end }}
+
+{{- /* Set observed.attachment slice */ -}}
+{{- $state = set $state "observed" (merge $state.observed (dict "attachment" (dict
+  "ready" $ready
+  "id" ($atProvider.id | default "")
+))) }}

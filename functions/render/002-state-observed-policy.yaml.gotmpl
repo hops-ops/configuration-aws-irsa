@@ -1,0 +1,21 @@
+{{- /* Extract policy observation */ -}}
+{{- $raw := $.observed.resources | default dict }}
+{{- $entry := get $raw "policy" | default dict }}
+{{- $resource := $entry.resource | default dict }}
+{{- $status := $resource.status | default dict }}
+{{- $atProvider := $status.atProvider | default dict }}
+
+{{- /* Check readiness from conditions */ -}}
+{{- $ready := false }}
+{{- range ($status.conditions | default list) }}
+  {{- if and (eq .type "Ready") (eq .status "True") }}
+    {{- $ready = true }}
+  {{- end }}
+{{- end }}
+
+{{- /* Set observed.policy slice */ -}}
+{{- $state = set $state "observed" (merge $state.observed (dict "policy" (dict
+  "ready" $ready
+  "arn" ($atProvider.arn | default "")
+  "name" ($atProvider.name | default "")
+))) }}

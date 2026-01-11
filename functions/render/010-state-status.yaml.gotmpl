@@ -1,0 +1,33 @@
+{{- $eff := $state.spec.effective }}
+{{- $obs := $state.observed }}
+
+{{- /* Compute overall readiness - all resources must be ready */ -}}
+{{- $ready := and $obs.role.ready $obs.policy.ready $obs.attachment.ready }}
+
+{{- /* Set $state.status */ -}}
+{{- $state = set $state "status" (dict
+  "ready" $ready
+  "accountId" $eff.accountId
+  "oidc" (dict
+    "issuer" $eff.oidc
+    "providerArn" $eff.oidcProviderArn
+  )
+  "role" (dict
+    "name" $state.irsa.role.name
+    "arn" ($obs.role.arn | default "Pending")
+    "permissionsBoundary" $eff.permissionsBoundary
+  )
+  "policy" (dict
+    "name" $state.irsa.policy.name
+    "arn" ($obs.policy.arn | default "Pending")
+  )
+  "serviceAccount" (dict
+    "name" $eff.serviceAccount.name
+    "namespace" $eff.serviceAccount.namespace
+    "subject" $eff.serviceAccount.subject
+  )
+  "spec" (dict
+    "raw" $state.spec.raw
+    "effective" $state.spec.effective
+  )
+) }}

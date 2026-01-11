@@ -5,37 +5,40 @@ metadata:
   namespace: example-env
 spec:
   clusterName: cluster-x
-  managementPolicies:
-  - "*"
-  aws:
-    providerConfig: shared-aws
+  providerConfigRef:
+    name: shared-aws
   accountId: "123456789012"
   oidc: "https://oidc.eks.us-west-2.amazonaws.com/id/EXAMPLE1234567890"
   permissionsBoundary: "arn:aws:iam::123456789012:policy/eks-boundary"
-  policy: |
-    {
-      "Version": "2012-10-17",
-      "Statement": [
-        {
-          "Sid": "LokiStorage",
-          "Effect": "Allow",
-          "Action": [
-            "s3:ListBucket",
-            "s3:PutObject",
-            "s3:GetObject",
-            "s3:DeleteObject"
-          ],
-          "Resource": [
-            "arn:aws:s3:::example-loki-chunks",
-            "arn:aws:s3:::example-loki-chunks/*",
-            "arn:aws:s3:::example-loki-ruler",
-            "arn:aws:s3:::example-loki-ruler/*"
-          ]
-        }
-      ]
-    }
-  rolePrefix: irsa-
-  policyPrefix: irsa-
+  role:
+    namePrefix: irsa-
+  policy:
+    namePrefix: irsa-
+    document: |
+      {
+        "Version": "2012-10-17",
+        "Statement": [
+          {
+            "Sid": "LokiStorage",
+            "Effect": "Allow",
+            "Action": [
+              "s3:ListBucket",
+              "s3:PutObject",
+              "s3:GetObject",
+              "s3:DeleteObject"
+            ],
+            "Resource": [
+              "arn:aws:s3:::example-loki-chunks",
+              "arn:aws:s3:::example-loki-chunks/*",
+              "arn:aws:s3:::example-loki-ruler",
+              "arn:aws:s3:::example-loki-ruler/*"
+            ]
+          }
+        ]
+      }
+  labels:
+    team: platform
+    service: logging
   tags:
     team: platform
     service: logging

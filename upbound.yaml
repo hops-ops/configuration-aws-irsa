@@ -14,7 +14,7 @@ spec:
     version: '>=v0.6.0'
   description: XRD for configuring IRSA.
   license: Apache-2.0
-  maintainer: Patrick Lee Scott <pat@patscott.io
+  maintainer: Patrick Lee Scott <pat@patscott.io>
   readme: |
     # configuration-aws-irsa
 

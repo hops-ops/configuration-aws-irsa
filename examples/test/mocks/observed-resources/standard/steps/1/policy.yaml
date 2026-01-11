@@ -1,0 +1,16 @@
+# Policy is Ready in step 1
+apiVersion: iam.aws.m.upbound.io/v1beta1
+kind: Policy
+metadata:
+  name: irsa-cluster-x-loki
+  annotations:
+    crossplane.io/composition-resource-name: policy
+status:
+  conditions:
+  - type: Ready
+    status: "True"
+  - type: Synced
+    status: "True"
+  atProvider:
+    arn: arn:aws:iam::123456789012:policy/irsa-cluster-x-loki
+    name: irsa-cluster-x-loki
