@@ -24,7 +24,7 @@ spec:
                 description: The name of the EKS cluster. Used as fallback for providerConfigRef.name and as part of default resource naming.
               labels:
                 type: object
-                description: Custom labels applied to all managed resources. Merged with default labels (hops.ops.com.ai/managed, hops.ops.com.ai/irsa).
+                description: Custom labels applied to all Kubernetes resources. Merged with default labels (hops.ops.com.ai/managed, hops.ops.com.ai/irsa).
                 additionalProperties:
                   type: string
                 x-kubernetes-preserve-unknown-fields: true
@@ -102,7 +102,9 @@ spec:
                 - namespace
               tags:
                 type: object
-                description: AWS tags to apply to all resources. Merged with default tag (hops=true).
+                description: Custom tags applied to all AWS resources. Merged with default tags (hops.ops.com.ai/managed, hops.ops.com.ai/irsa).
+                additionalProperties:
+                  type: string
                 x-kubernetes-preserve-unknown-fields: true
             required:
             - accountId

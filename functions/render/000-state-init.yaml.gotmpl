@@ -47,16 +47,13 @@
 {{- $policyName := $policyNameOverride | default $policyNameDefault }}
 {{- $attachmentName := $baseName }}
 
-{{- /* Default labels: managed=true + irsa=<name> */ -}}
-{{- $defaultLabels := dict
+{{- /* Default labels/tags: managed=true + <kind>=<name> */ -}}
+{{- $defaults := dict
   "hops.ops.com.ai/managed" "true"
-  "hops.ops.com.ai/irsa" $name
+  (printf "hops.ops.com.ai/%s" (lower $xr.kind)) $name
 }}
-{{- $labels := merge $defaultLabels ($spec.labels | default dict) }}
-
-{{- /* Default AWS tags */ -}}
-{{- $defaultTags := dict "hops" "true" }}
-{{- $tags := merge $defaultTags ($spec.tags | default dict) }}
+{{- $labels := merge $defaults ($spec.labels | default dict) }}
+{{- $tags := merge $defaults ($spec.tags | default dict) }}
 
 {{- /* Initialize $state */ -}}
 {{- $state := dict

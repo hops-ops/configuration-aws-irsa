@@ -351,7 +351,8 @@ _items = [
                     kind = "Role"
                     metadata.name = "cluster-tagged"
                     spec.forProvider.tags = {
-                        hops = "true"
+                        "hops.ops.com.ai/managed" = "true"
+                        "hops.ops.com.ai/irsa" = "tagged"
                     }
                 }
             ]
@@ -389,7 +390,8 @@ _items = [
                     kind = "Role"
                     metadata.name = "cluster-tagged"
                     spec.forProvider.tags = {
-                        hops = "true"
+                        "hops.ops.com.ai/managed" = "true"
+                        "hops.ops.com.ai/irsa" = "tagged"
                         team = "platform"
                         service = "logging"
                     }
