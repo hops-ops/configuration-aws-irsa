@@ -1,0 +1,8 @@
+{{- $eff := $state.spec.effective }}
+
+{{- /* Set irsa.attachment slice */ -}}
+{{- $attachment := dict
+  "name" $eff.attachment.name
+  "ready" $state.observed.attachment.ready
+}}
+{{- $state = set $state "irsa" (merge $state.irsa (dict "attachment" $attachment)) }}

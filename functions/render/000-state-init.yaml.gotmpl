@@ -1,0 +1,104 @@
+{{- $xr := getCompositeResource . }}
+{{- $metadata := $xr.metadata | default dict }}
+{{- $spec := $xr.spec }}
+
+{{- /* Extract spec fields */ -}}
+{{- $clusterName := $spec.clusterName | default "" }}
+{{- $accountId := $spec.accountId | default "" }}
+{{- $managementPolicies := $spec.managementPolicies | default (list "*") }}
+
+{{- /* OIDC normalization - remove protocol prefix and trailing slash */ -}}
+{{- $oidcRaw := $spec.oidc | default "" }}
+{{- $oidcNoHttps := trimPrefix "https://" $oidcRaw }}
+{{- $oidcNoHttp := trimPrefix "http://" $oidcNoHttps }}
+{{- $oidc := trimSuffix "/" $oidcNoHttp }}
+{{- $oidcProviderArn := printf "arn:aws:iam::%s:oidc-provider/%s" $accountId $oidc }}
+
+{{- /* Provider config - defaults to clusterName */ -}}
+{{- $providerConfigRef := $spec.providerConfigRef | default dict }}
+{{- $providerConfigName := $providerConfigRef.name | default $clusterName | default "default" }}
+{{- $providerConfigKind := $providerConfigRef.kind | default "ProviderConfig" }}
+
+{{- /* Role configuration */ -}}
+{{- $role := $spec.role | default dict }}
+{{- $roleNamePrefix := $role.namePrefix | default "" }}
+{{- $roleNameOverride := $role.nameOverride | default "" }}
+{{- $roleExternalName := $role.externalName | default "" }}
+
+{{- /* Policy configuration */ -}}
+{{- $policy := $spec.policy | default dict }}
+{{- $policyDocument := $policy.document | default "" }}
+{{- $policyNamePrefix := $policy.namePrefix | default "" }}
+{{- $policyNameOverride := $policy.nameOverride | default "" }}
+{{- $policyExternalName := $policy.externalName | default "" }}
+
+{{- /* Service account */ -}}
+{{- $serviceAccount := $spec.serviceAccount | default dict }}
+{{- $saName := $serviceAccount.name | default "" }}
+{{- $saNamespace := $serviceAccount.namespace | default "" }}
+{{- $saSubject := printf "system:serviceaccount:%s:%s" $saNamespace $saName }}
+
+{{- /* Compute default names */ -}}
+{{- $name := $metadata.name | default "" }}
+{{- $baseName := join "-" (compact (list $clusterName $name)) }}
+{{- $roleNameDefault := printf "%s%s" $roleNamePrefix $baseName }}
+{{- $policyNameDefault := printf "%s%s" $policyNamePrefix $baseName }}
+{{- $roleName := $roleNameOverride | default $roleNameDefault }}
+{{- $policyName := $policyNameOverride | default $policyNameDefault }}
+{{- $attachmentName := $baseName }}
+
+{{- /* Default labels: managed=true + irsa=<name> */ -}}
+{{- $defaultLabels := dict
+  "hops.ops.com.ai/managed" "true"
+  "hops.ops.com.ai/irsa" $name
+}}
+{{- $labels := merge $defaultLabels ($spec.labels | default dict) }}
+
+{{- /* Default AWS tags */ -}}
+{{- $defaultTags := dict "hops" "true" }}
+{{- $tags := merge $defaultTags ($spec.tags | default dict) }}
+
+{{- /* Initialize $state */ -}}
+{{- $state := dict
+  "spec" (dict
+    "raw" $spec
+    "effective" (dict
+      "name" $name
+      "clusterName" $clusterName
+      "accountId" $accountId
+      "managementPolicies" $managementPolicies
+      "oidc" $oidc
+      "oidcProviderArn" $oidcProviderArn
+      "permissionsBoundary" ($spec.permissionsBoundary | default "")
+      "providerConfigRef" (dict
+        "name" $providerConfigName
+        "kind" $providerConfigKind
+      )
+      "role" (dict
+        "name" $roleName
+        "namePrefix" $roleNamePrefix
+        "nameOverride" $roleNameOverride
+        "externalName" $roleExternalName
+      )
+      "policy" (dict
+        "name" $policyName
+        "document" $policyDocument
+        "namePrefix" $policyNamePrefix
+        "nameOverride" $policyNameOverride
+        "externalName" $policyExternalName
+      )
+      "attachment" (dict
+        "name" $attachmentName
+      )
+      "serviceAccount" (dict
+        "name" $saName
+        "namespace" $saNamespace
+        "subject" $saSubject
+      )
+      "labels" $labels
+      "tags" $tags
+    )
+  )
+  "observed" (dict)
+  "irsa" (dict)
+}}

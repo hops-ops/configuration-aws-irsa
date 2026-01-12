@@ -1,0 +1,10 @@
+{{- $eff := $state.spec.effective }}
+
+{{- /* Set irsa.policy slice */ -}}
+{{- $policy := dict
+  "name" $eff.policy.name
+  "document" $eff.policy.document
+  "externalName" $eff.policy.externalName
+  "ready" $state.observed.policy.ready
+}}
+{{- $state = set $state "irsa" (merge $state.irsa (dict "policy" $policy)) }}

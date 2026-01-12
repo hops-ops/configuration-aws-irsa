@@ -1,7 +1,7 @@
 apiVersion: meta.dev.upbound.io/v2alpha1
 kind: Project
 metadata:
-  name: configuration-aws-irsa
+  name: aws-irsa
 spec:
   dependsOn:
   - apiVersion: pkg.crossplane.io/v1
@@ -14,10 +14,10 @@ spec:
     version: '>=v0.6.0'
   description: XRD for configuring IRSA.
   license: Apache-2.0
-  maintainer: Patrick Lee Scott <pat@patscott.io
+  maintainer: Patrick Lee Scott <pat@patscott.io>
   readme: |
-    # configuration-aws-irsa
+    # aws-irsa
 
     Configures IAM Roles for Service Accounts (IRSA) on EKS clusters.
-  repository: ghcr.io/hops-ops/configuration-aws-irsa
-  source: github.com/hops-ops/configuration-aws-irsa
+  repository: ghcr.io/hops-ops/aws-irsa
+  source: github.com/hops-ops/aws-irsa

@@ -1,216 +1,262 @@
+# aws-irsa
 
-# configuration-aws-irsa
+Provisions IAM Roles for Service Accounts (IRSA) so Kubernetes workloads can assume AWS roles without static credentials.
 
-`configuration-aws-irsa` is a Crossplane configuration package that provisions IAM Roles for Service Accounts (IRSA) so Kubernetes workloads can assume AWS roles without shipping static credentials. It publishes the `XIRSA` composite resource definition that standardises how teams request IAM access for a given service account.
+## Why IRSA?
 
-## Features
+**Without IRSA:**
+- Static AWS credentials stored in Kubernetes Secrets
+- Credentials shared across pods, hard to audit
+- Manual rotation of access keys
+- Overly broad permissions to avoid complexity
+- Security risk if credentials leak
 
-- Creates IAM roles with the correct web identity trust policy for an EKS OIDC issuer.
-- Attaches caller-supplied IAM policies and supports optional `rolePrefix`, `policyPrefix`, overrides via `roleNameOverride`/`policyNameOverride`, and permissions boundaries.
-- Accepts AWS provider configs via `awsProviderConfig` or `aws.providerConfig`, defaulting to the composite's `clusterName`.
-- Automatically merges the `hops: "true"` tag with any caller-provided tags.
-- Ships with validation, testing, and publishing automation.
+**With IRSA:**
+- No static credentials - pods assume IAM roles via OIDC
+- Fine-grained, per-service-account permissions
+- Automatic credential rotation by AWS
+- Full CloudTrail audit trail
+- Follows AWS security best practices
 
-## Prerequisites
+## The Journey
 
-- An Amazon EKS cluster and OIDC provider for your workload.
-- Crossplane installed in the target cluster.
-- Crossplane providers:
-  - `provider-aws-iam` (≥ v2.1.1)
-- Crossplane functions:
-  - `function-auto-ready` (≥ v0.5.1)
-- Access to GitHub Container Registry (GHCR) for pulling the package image.
+### Stage 1: Getting Started (Single Service)
 
-## Installing the Package
+Minimal configuration for a single service needing AWS access.
 
-```yaml
-apiVersion: pkg.crossplane.io/v1
-kind: Configuration
-metadata:
-  name: configuration-aws-irsa
-spec:
-  package: ghcr.io/hops-ops/configuration-aws-irsa:latest
-  packagePullSecrets:
-    - name: ghcr
-  skipDependencyResolution: true
-```
-
-## Example Composite
+**Why start here?**
+- Establishes secure credential-free pattern from day one
+- No migration pain when you scale
+- Each service gets exactly the permissions it needs
 
 ```yaml
 apiVersion: aws.hops.ops.com.ai/v1alpha1
-kind: XIRSA
+kind: IRSA
 metadata:
-  name: example-irsa
+  name: my-app
+  namespace: production
 spec:
-  clusterName: cluster-x
-  awsProviderConfig: shared-aws
+  clusterName: my-cluster
   accountId: "123456789012"
+  oidc: oidc.eks.us-east-1.amazonaws.com/id/EXAMPLE123
+  policy:
+    document: |
+      {
+        "Version": "2012-10-17",
+        "Statement": [
+          {
+            "Effect": "Allow",
+            "Action": ["s3:GetObject", "s3:PutObject"],
+            "Resource": ["arn:aws:s3:::my-bucket/*"]
+          }
+        ]
+      }
+  serviceAccount:
+    namespace: production
+    name: my-app
+```
+
+### Stage 2: Growing (Multiple Services)
+
+Add naming conventions and permissions boundaries as your team grows.
+
+**Why expand?**
+- Consistent naming across services
+- Permissions boundaries prevent privilege escalation
+- Custom labels for cost allocation and ownership tracking
+
+```yaml
+apiVersion: aws.hops.ops.com.ai/v1alpha1
+kind: IRSA
+metadata:
   name: loki
-  oidc: "https://oidc.eks.us-west-2.amazonaws.com/id/EXAMPLE1234567890"
+  namespace: logging
+spec:
+  clusterName: prod-cluster
+  providerConfigRef:
+    name: shared-aws
+  accountId: "123456789012"
+  oidc: oidc.eks.us-west-2.amazonaws.com/id/CLUSTER123
   permissionsBoundary: "arn:aws:iam::123456789012:policy/eks-boundary"
-  rolePrefix: irsa-
-  policyPrefix: irsa-
-  tags:
+  role:
+    namePrefix: irsa-
+  policy:
+    namePrefix: irsa-
+    document: |
+      {
+        "Version": "2012-10-17",
+        "Statement": [
+          {
+            "Effect": "Allow",
+            "Action": ["s3:*"],
+            "Resource": [
+              "arn:aws:s3:::loki-chunks",
+              "arn:aws:s3:::loki-chunks/*"
+            ]
+          }
+        ]
+      }
+  labels:
     team: platform
     service: logging
+  tags:
+    team: platform
+    cost-center: infrastructure
   serviceAccount:
-    namespace: loki
+    namespace: logging
     name: loki
-  policy: |
-    {
-      "Version": "2012-10-17",
-      "Statement": [
-        {
-          "Sid": "LokiStorage",
-          "Effect": "Allow",
-          "Action": [
-            "s3:ListBucket",
-            "s3:PutObject",
-            "s3:GetObject",
-            "s3:DeleteObject"
-          ],
-          "Resource": [
-            "arn:aws:s3:::example-loki-chunks",
-            "arn:aws:s3:::example-loki-chunks/*",
-            "arn:aws:s3:::example-loki-ruler",
-            "arn:aws:s3:::example-loki-ruler/*"
-          ]
-        }
-      ]
-    }
 ```
 
-By default the IAM role, policy, and attachment use `<clusterName>-<name>` where `name` comes from `spec.name` or `metadata.name`. Set `rolePrefix` / `policyPrefix` to prepend strings to those defaults, or use `roleNameOverride` / `policyNameOverride` to supply the exact AWS names (bypassing prefixes entirely) when you need full control.
+### Stage 3: Enterprise Scale
 
-## Local Development
+Standardized patterns across multiple clusters and accounts.
 
-- `make render` – render the default example composite.
-- `make validate` – run Crossplane schema validation against the XRD and examples.
-- `make test` – execute `up test` regression tests.
-- `make publish tag=<version>` – build and push the configuration package.
+**Why this matters at scale?**
+- Exact name control for cross-account role assumptions
+- Consistent tagging for compliance and cost allocation
+- Integration with organizational governance policies
 
-Keep `.github/` and `.gitops/` workflows aligned when making automation changes.
+```yaml
+apiVersion: aws.hops.ops.com.ai/v1alpha1
+kind: IRSA
+metadata:
+  name: cross-account-reader
+  namespace: data-platform
+spec:
+  clusterName: analytics-cluster
+  providerConfigRef:
+    name: data-account-aws
+  accountId: "987654321098"
+  oidc: oidc.eks.us-east-1.amazonaws.com/id/ANALYTICS
+  permissionsBoundary: "arn:aws:iam::987654321098:policy/strict-boundary"
+  role:
+    nameOverride: "analytics-cross-account-reader"
+  policy:
+    nameOverride: "analytics-cross-account-policy"
+    document: |
+      {
+        "Version": "2012-10-17",
+        "Statement": [
+          {
+            "Effect": "Allow",
+            "Action": ["sts:AssumeRole"],
+            "Resource": ["arn:aws:iam::123456789012:role/data-reader"]
+          }
+        ]
+      }
+  labels:
+    compliance: pci-dss
+    data-classification: confidential
+  tags:
+    compliance: pci-dss
+    environment: production
+  serviceAccount:
+    namespace: data-platform
+    name: data-reader
+```
+
+### Stage 4: Import Existing
+
+Bring existing IAM roles under Crossplane management without recreation.
+
+**Why import?**
+- Preserve existing role ARNs referenced by other systems
+- Gradual adoption path
+- No disruption to running workloads
+
+```yaml
+apiVersion: aws.hops.ops.com.ai/v1alpha1
+kind: IRSA
+metadata:
+  name: legacy-service
+  namespace: production
+spec:
+  # Use orphan policy to manage without deletion rights
+  managementPolicies: ["Create", "Observe", "Update", "LateInitialize"]
+  clusterName: my-cluster
+  accountId: "123456789012"
+  oidc: oidc.eks.us-east-1.amazonaws.com/id/CLUSTER
+  role:
+    externalName: existing-irsa-role
+  policy:
+    externalName: existing-irsa-policy
+    document: |
+      {
+        "Version": "2012-10-17",
+        "Statement": [...]
+      }
+  serviceAccount:
+    namespace: production
+    name: legacy-app
+```
+
+## Using IRSA
+
+Reference the role ARN in your pod's service account annotation:
+
+```yaml
+apiVersion: v1
+kind: ServiceAccount
+metadata:
+  name: my-app
+  namespace: production
+  annotations:
+    # Get this from IRSA status
+    eks.amazonaws.com/role-arn: arn:aws:iam::123456789012:role/my-cluster-my-app
+```
+
+Or query the status programmatically:
+
+```bash
+kubectl get irsa my-app -n production -o jsonpath='{.status.role.arn}'
+```
+
+## Status
+
+The IRSA resource exposes typed status fields from the created AWS resources:
+
+| Field | Description |
+|-------|-------------|
+| `ready` | Whether all composed resources are ready |
+| `role.arn` | ARN of the IAM role - use for ServiceAccount annotations |
+| `role.name` | Name of the IAM role in AWS |
+| `policy.arn` | ARN of the IAM policy |
+| `policy.name` | Name of the IAM policy in AWS |
+| `attachment.id` | ID of the role-policy attachment in AWS |
+
+Example:
+```yaml
+status:
+  ready: true
+  role:
+    arn: "arn:aws:iam::123456789012:role/cluster-x-loki"
+    name: "cluster-x-loki"
+  policy:
+    arn: "arn:aws:iam::123456789012:policy/cluster-x-loki"
+    name: "cluster-x-loki"
+  attachment:
+    id: "cluster-x-loki-20240115123456789"
+```
+
+## Composed Resources
+
+This XRD creates:
+
+- **IAM Role** - With web identity trust policy for the OIDC provider
+- **IAM Policy** - Contains the permissions you define
+- **RolePolicyAttachment** - Links the policy to the role
+- **Usage** (2x) - Deletion protection for Role and Policy
+
+## Development
+
+```bash
+make render          # Render all examples
+make validate        # Validate all examples against schemas
+make test            # Run unit tests
+make e2e             # Run E2E tests (requires AWS credentials)
+make publish tag=v1  # Build and push package
+```
 
 ## License
 
-Apache-2.0. See [LICENSE](LICENSE) for details.
-
-> **Note**: Ensure you are authenticated with GitHub Container Registry.
-
-### Local Rendering
-
-Preview the composed resources without applying them:
-
-```bash
-make render
-```
-
-This renders the example composition using the Go template functions.
-
-## CI/CD Pipelines
-
-Automated workflows handle quality assurance, testing, and publishing:
-
-- **`quality.yaml`**: Comprehensive validation of compositions and examples
-- **`on-push-main.yaml`**: Quality checks and semantic versioning on main branch pushes
-- **`on-pr.yaml**: Pull request validation and preview package publishing
-- **`on-version-tagged.yaml`**: Production releases with GitOps chart updates
-- **`publish.yaml`**: Package publishing to GitHub Container Registry
-
-### Quality Gates
-
-Before release, the pipeline validates:
-- XRD schema compliance
-- Composition rendering
-- Crossplane beta validation for examples
-- Helm chart dependency versions
-
-### Automated Releases
-
-- **Preview packages** on pull requests for testing
-- **Semantic versioning** based on conventional commits
-- **GitOps-ready artifacts** published to Helm repository
-
-## Dependency Management
-
-Automated dependency updates using [Renovate](https://docs.renovatebot.com/):
-
-### Configured for:
-
-- **Helm charts** in Go template files (`.yaml.gotmpl`)
-- **Crossplane providers and functions** in YAML configurations
-- **Cert-Manager app versions** in GitOps Chart.yaml
-
-### Custom Managers:
-
-The `renovate.json` defines custom regex managers to parse and update:
-- Cert-Manager Helm chart versions in template files
-- Provider version constraints
-- Function version requirements
-
-### Pull Request Automation:
-
-Renovate creates dependency update PRs with:
-- Version bump commits
-- Regression testing via CI
-- Dependency dashboard tracking
-
-## Testing
-
-The project includes comprehensive testing infrastructure:
-
-### Crossplane Beta Validation
-
-Validates XRD schemas and compositions against examples:
-
-```bash
-crossplane beta validate apis/irsas examples/irsas
-```
-
-### Composition Rendering Tests
-
-Tests pipeline execution and resource generation:
-
-```bash
-up test run tests/*
-```
-
-### Manual Testing
-
-Render compositions to verify outputs:
-
-```bash
-make render    # Preview composed resources
-```
-
-## License
-
-Apache-2.0 License. See [LICENSE](LICENSE) for details.
-
-## Contributing
-
-1. Fork the repository
-2. Create a feature branch
-3. Test your changes:
-   ```bash
-   make validate
-   make test
-   ```
-4. Submit a pull request
-
-## Support
-
-- **Issues**: [GitHub Issues](https://github.com/hops-ops/configuration-aws-irsa/issues)
-- **Discussions**: [GitHub Discussions](https://github.com/hops-ops/configuration-aws-irsa/discussions)
-
-## Maintainer
-
-- **Patrick Lee Scott** <pat@patscott.io>
-
-## Links
-
-- **GitHub Repository**: [github.com/hops-ops/configuration-aws-irsa](https://github.com/hops-ops/configuration-aws-irsa)
-- **Container Registry**: [ghcr.io/hops-ops/configuration-aws-irsa](ghcr.io/hops-ops/configuration-aws-irsa)
-- **Documentation**: [docs.crossplane.io](https://docs.crossplane.io/)
-- **Cert-Manager**: [irsa.io](https://irsa.io/)
+Apache-2.0

@@ -2,6 +2,8 @@ name: on-pr
 
 on:
   pull_request:
+    branches:
+      - main
     types:
       - labeled
       - opened
@@ -30,7 +32,9 @@ jobs:
       examples: |
         [
           { "example": "examples/irsas/minimal.yaml" },
-          { "example": "examples/irsas/standard.yaml" }
+          { "example": "examples/irsas/standard.yaml" },
+          { "example": "examples/irsas/standard.yaml", "observed_resources": "examples/test/mocks/observed-resources/standard/steps/1/" },
+          { "example": "examples/irsas/standard.yaml", "observed_resources": "examples/test/mocks/observed-resources/standard/steps/2/" }
         ]
       api_path: apis/irsas
       error_on_missing_schemas: true
@@ -45,6 +49,7 @@ jobs:
       aws-use-oidc: true
       aws-account-id: "034489662075"
       aws-region: us-east-2
+      timeout-minutes: 30
 
   publish:
     needs:

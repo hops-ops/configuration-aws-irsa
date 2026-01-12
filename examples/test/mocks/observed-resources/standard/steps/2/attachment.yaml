@@ -1,0 +1,15 @@
+# Step 2: Attachment is Ready
+apiVersion: iam.aws.m.upbound.io/v1beta1
+kind: RolePolicyAttachment
+metadata:
+  name: cluster-x-loki
+  annotations:
+    crossplane.io/composition-resource-name: attachment
+status:
+  conditions:
+  - type: Ready
+    status: "True"
+  - type: Synced
+    status: "True"
+  atProvider:
+    id: irsa-cluster-x-loki/arn:aws:iam::123456789012:policy/irsa-cluster-x-loki

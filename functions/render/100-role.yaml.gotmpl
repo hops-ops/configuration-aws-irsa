@@ -1,0 +1,23 @@
+---
+apiVersion: iam.aws.m.upbound.io/v1beta1
+kind: Role
+metadata:
+  name: {{ $state.irsa.role.name }}
+  annotations:
+    {{ setResourceNameAnnotation "role" }}
+    {{- if $state.irsa.role.externalName }}
+    crossplane.io/external-name: {{ $state.irsa.role.externalName }}
+    {{- end }}
+  labels: {{ $state.irsa.labels | toJson }}
+spec:
+  managementPolicies: {{ $state.irsa.managementPolicies | toJson }}
+  forProvider:
+    assumeRolePolicy: |
+      {{ $state.irsa.role.assumeRolePolicy | nindent 6 }}
+    {{- if $state.irsa.permissionsBoundary }}
+    permissionsBoundary: {{ $state.irsa.permissionsBoundary }}
+    {{- end }}
+    tags: {{ $state.irsa.tags | toJson }}
+  providerConfigRef:
+    name: {{ $state.irsa.providerConfig.name }}
+    kind: {{ $state.irsa.providerConfig.kind }}

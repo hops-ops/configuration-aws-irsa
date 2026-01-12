@@ -1,0 +1,13 @@
+# Step 2: Usage for Role protection is Ready
+apiVersion: protection.crossplane.io/v1beta1
+kind: Usage
+metadata:
+  name: loki-delete-attachment-before-role
+  annotations:
+    crossplane.io/composition-resource-name: usage-role-attachment
+status:
+  conditions:
+  - type: Ready
+    status: "True"
+  - type: Synced
+    status: "True"

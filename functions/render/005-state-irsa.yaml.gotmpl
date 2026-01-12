@@ -1,0 +1,17 @@
+{{- $eff := $state.spec.effective }}
+
+{{- /* Core IRSA state - shared by all resources */ -}}
+{{- $irsa := dict
+  "name" $eff.name
+  "clusterName" $eff.clusterName
+  "accountId" $eff.accountId
+  "managementPolicies" $eff.managementPolicies
+  "providerConfig" $eff.providerConfigRef
+  "labels" $eff.labels
+  "tags" $eff.tags
+  "oidc" $eff.oidc
+  "oidcProviderArn" $eff.oidcProviderArn
+  "permissionsBoundary" $eff.permissionsBoundary
+  "serviceAccount" $eff.serviceAccount
+}}
+{{- $state = set $state "irsa" $irsa }}

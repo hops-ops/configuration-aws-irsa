@@ -1,0 +1,27 @@
+{{- $eff := $state.spec.effective }}
+
+{{- /* Build assume role policy */ -}}
+{{- $assumeRolePolicy := dict
+  "Version" "2012-10-17"
+  "Statement" (list (dict
+    "Effect" "Allow"
+    "Principal" (dict
+      "Federated" $state.irsa.oidcProviderArn
+    )
+    "Action" "sts:AssumeRoleWithWebIdentity"
+    "Condition" (dict
+      "StringEquals" (dict
+        (printf "%s:sub" $state.irsa.oidc) $state.irsa.serviceAccount.subject
+      )
+    )
+  ))
+}}
+
+{{- /* Set irsa.role slice */ -}}
+{{- $role := dict
+  "name" $eff.role.name
+  "externalName" $eff.role.externalName
+  "assumeRolePolicy" ($assumeRolePolicy | toJson)
+  "ready" $state.observed.role.ready
+}}
+{{- $state = set $state "irsa" (merge $state.irsa (dict "role" $role)) }}

@@ -1,0 +1,68 @@
+---
+apiVersion: iam.aws.m.upbound.io/v1beta1
+kind: RolePolicyAttachment
+metadata:
+  name: {{ $state.irsa.attachment.name }}
+  annotations:
+    {{ setResourceNameAnnotation "attachment" }}
+  labels: {{ $state.irsa.labels | toJson }}
+spec:
+  managementPolicies: {{ $state.irsa.managementPolicies | toJson }}
+  forProvider:
+    policyArnSelector:
+      matchControllerRef: true
+      matchLabels:
+        hops.ops.com.ai/irsa: {{ $state.irsa.name }}
+    roleSelector:
+      matchControllerRef: true
+      matchLabels:
+        hops.ops.com.ai/irsa: {{ $state.irsa.name }}
+  providerConfigRef:
+    name: {{ $state.irsa.providerConfig.name }}
+    kind: {{ $state.irsa.providerConfig.kind }}
+
+{{- /* Usage: Delete attachment before role */ -}}
+{{- if and $state.irsa.role.ready $state.irsa.attachment.ready }}
+---
+apiVersion: protection.crossplane.io/v1beta1
+kind: Usage
+metadata:
+  name: {{ $state.irsa.name }}-delete-attachment-before-role
+  annotations:
+    {{ setResourceNameAnnotation "usage-role-attachment" }}
+spec:
+  replayDeletion: true
+  of:
+    apiVersion: iam.aws.m.upbound.io/v1beta1
+    kind: Role
+    resourceRef:
+      name: {{ $state.irsa.role.name }}
+  by:
+    apiVersion: iam.aws.m.upbound.io/v1beta1
+    kind: RolePolicyAttachment
+    resourceRef:
+      name: {{ $state.irsa.attachment.name }}
+{{- end }}
+
+{{- /* Usage: Delete attachment before policy */ -}}
+{{- if and $state.irsa.policy.ready $state.irsa.attachment.ready }}
+---
+apiVersion: protection.crossplane.io/v1beta1
+kind: Usage
+metadata:
+  name: {{ $state.irsa.name }}-delete-attachment-before-policy
+  annotations:
+    {{ setResourceNameAnnotation "usage-policy-attachment" }}
+spec:
+  replayDeletion: true
+  of:
+    apiVersion: iam.aws.m.upbound.io/v1beta1
+    kind: Policy
+    resourceRef:
+      name: {{ $state.irsa.policy.name }}
+  by:
+    apiVersion: iam.aws.m.upbound.io/v1beta1
+    kind: RolePolicyAttachment
+    resourceRef:
+      name: {{ $state.irsa.attachment.name }}
+{{- end }}

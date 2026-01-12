@@ -1,0 +1,20 @@
+---
+apiVersion: iam.aws.m.upbound.io/v1beta1
+kind: Policy
+metadata:
+  name: {{ $state.irsa.policy.name }}
+  annotations:
+    {{ setResourceNameAnnotation "policy" }}
+    {{- if $state.irsa.policy.externalName }}
+    crossplane.io/external-name: {{ $state.irsa.policy.externalName }}
+    {{- end }}
+  labels: {{ $state.irsa.labels | toJson }}
+spec:
+  managementPolicies: {{ $state.irsa.managementPolicies | toJson }}
+  forProvider:
+    policy: |
+      {{- $state.irsa.policy.document | nindent 6 }}
+    tags: {{ $state.irsa.tags | toJson }}
+  providerConfigRef:
+    name: {{ $state.irsa.providerConfig.name }}
+    kind: {{ $state.irsa.providerConfig.kind }}

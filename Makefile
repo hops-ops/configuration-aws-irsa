@@ -1,6 +1,6 @@
 SHELL := /bin/bash
 
-PACKAGE ?= configuration-aws-irsa
+PACKAGE ?= aws-irsa
 XRD_DIR := apis/irsas
 COMPOSITION := $(XRD_DIR)/composition.yaml
 DEFINITION := $(XRD_DIR)/definition.yaml
@@ -12,7 +12,9 @@ E2E_TESTS := $(wildcard tests/e2etest-*)
 # Format: example_path::observed_resources_path (observed_resources_path is optional)
 EXAMPLES := \
     examples/irsas/minimal.yaml:: \
-    examples/irsas/standard.yaml::
+    examples/irsas/standard.yaml:: \
+    examples/irsas/standard.yaml::examples/test/mocks/observed-resources/standard/steps/1/ \
+    examples/irsas/standard.yaml::examples/test/mocks/observed-resources/standard/steps/2/
 
 clean:
 	rm -rf _output

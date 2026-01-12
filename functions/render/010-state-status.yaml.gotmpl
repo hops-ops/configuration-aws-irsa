@@ -1,0 +1,20 @@
+{{- $obs := $state.observed }}
+
+{{- /* Compute overall readiness - all resources must be ready */ -}}
+{{- $ready := and $obs.role.ready $obs.policy.ready $obs.attachment.ready }}
+
+{{- /* Set $state.status - typed fields only */ -}}
+{{- $state = set $state "status" (dict
+  "ready" $ready
+  "role" (dict
+    "arn" $obs.role.arn
+    "name" $obs.role.name
+  )
+  "policy" (dict
+    "arn" $obs.policy.arn
+    "name" $obs.policy.name
+  )
+  "attachment" (dict
+    "id" $obs.attachment.id
+  )
+) }}

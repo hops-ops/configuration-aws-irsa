@@ -1,0 +1,16 @@
+# Step 2: Role is Ready
+apiVersion: iam.aws.m.upbound.io/v1beta1
+kind: Role
+metadata:
+  name: irsa-cluster-x-loki
+  annotations:
+    crossplane.io/composition-resource-name: role
+status:
+  conditions:
+  - type: Ready
+    status: "True"
+  - type: Synced
+    status: "True"
+  atProvider:
+    arn: arn:aws:iam::123456789012:role/irsa-cluster-x-loki
+    name: irsa-cluster-x-loki
