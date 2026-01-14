@@ -17,7 +17,7 @@ spec:
     {{- if $state.irsa.permissionsBoundary }}
     permissionsBoundary: {{ $state.irsa.permissionsBoundary }}
     {{- end }}
-    tags: {{ $state.irsa.tags | toJson }}
+    tags: {{ merge (dict "Name" $state.irsa.role.name) $state.irsa.tags | toJson }}
   providerConfigRef:
     name: {{ $state.irsa.providerConfig.name }}
     kind: {{ $state.irsa.providerConfig.kind }}

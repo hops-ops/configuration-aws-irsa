@@ -14,7 +14,7 @@ spec:
   forProvider:
     policy: |
       {{- $state.irsa.policy.document | nindent 6 }}
-    tags: {{ $state.irsa.tags | toJson }}
+    tags: {{ merge (dict "Name" $state.irsa.policy.name) $state.irsa.tags | toJson }}
   providerConfigRef:
     name: {{ $state.irsa.providerConfig.name }}
     kind: {{ $state.irsa.providerConfig.kind }}
