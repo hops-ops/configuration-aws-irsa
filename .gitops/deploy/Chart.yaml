@@ -1,5 +1,5 @@
 apiVersion: v2
 name: aws-irsa
-version: 0.0.0
+version: 0.10.0
 description: GitOps packaging for the aws-irsa bundle
 appVersion: v0.1.0
